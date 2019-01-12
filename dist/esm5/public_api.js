@@ -1,0 +1,8 @@
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
+ */
+export { SmartConsoleService } from './src/app/smart-console/smart-console.service';
+export { SmartConsoleModule } from './src/app/smart-console/smart-console.module';
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHVibGljX2FwaS5qcyIsInNvdXJjZVJvb3QiOiJuZzovL0BzZWRlaC9zbWFydC1jb25zb2xlLyIsInNvdXJjZXMiOlsicHVibGljX2FwaS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7O0FBQUEsT0FBTyxFQUFFLG1CQUFtQixFQUFFLE1BQU0sK0NBQStDLENBQUM7QUFDcEYsT0FBTyxFQUFFLGtCQUFrQixFQUFFLE1BQU0sOENBQThDLENBQUMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgeyBTbWFydENvbnNvbGVTZXJ2aWNlIH0gZnJvbSAnLi9zcmMvYXBwL3NtYXJ0LWNvbnNvbGUvc21hcnQtY29uc29sZS5zZXJ2aWNlJztcclxuZXhwb3J0IHsgU21hcnRDb25zb2xlTW9kdWxlIH0gZnJvbSAnLi9zcmMvYXBwL3NtYXJ0LWNvbnNvbGUvc21hcnQtY29uc29sZS5tb2R1bGUnO1xyXG5cclxuIl19

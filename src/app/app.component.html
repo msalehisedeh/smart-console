@@ -1,0 +1,143 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h1>
+    Welcome to {{ title }}!
+  </h1>
+</div>
+
+<fieldset>
+  <legend>Options</legend>
+  <span>
+    <label for="output">
+      <input id="output"
+         type="checkbox" 
+         [checked]="options.output" 
+         (click)="update('output', $event)" />
+      Output Logs in log display insted of browser console.
+    </label>
+  </span>
+  <span>
+    <label for="upscale">
+      <input id="upscale"
+         type="checkbox" 
+         [checked]="options.upscale" 
+         (click)="update('upscale', $event)" />
+      Show additional info on each log
+    </label>
+  </span>
+  <span>
+    <label for="logDisabled">
+      <input id="logDisabled"
+         type="checkbox" 
+         [checked]="options.logDisabled" 
+         (click)="update('logDisabled', $event)" />
+      Disables all log level console logs
+    </label>
+  </span>
+  <span>
+    <label for="infoDisabled">
+      <input id="infoDisabled"
+         type="checkbox" 
+         [checked]="options.infoDisabled" 
+         (click)="update('infoDisabled', $event)" />
+      Disables all info level console logs
+    </label>
+  </span>
+  <span>
+    <label for="warnDisabled">
+      <input id="warnDisabled"
+         type="checkbox" 
+         [checked]="options.warnDisabled" 
+         (click)="update('warnDisabled', $event)" />
+      Disables all warn level console logs
+    </label>
+  </span>
+  <span>
+    <label for="errorDisabled">
+      <input id="errorDisabled"
+         type="checkbox" 
+         [checked]="options.errorDisabled" 
+         (click)="update('errorDisabled', $event)" />
+      Disables all error level console logs
+    </label>
+  </span>
+  <span>
+    <label for="traceDisabled">
+      <input id="traceDisabled"
+         type="checkbox" 
+         [checked]="options.traceDisabled" 
+         (click)="update('traceDisabled', $event)" />
+      Disables all trace level console logs
+    </label>
+  </span>
+  <span>
+    <label for="assertDisabled">
+      <input id="assertDisabled"
+         type="checkbox" 
+         [checked]="options.assertDisabled" 
+         (click)="update('assertDisabled', $event)" />
+      Disables assert logs on console
+    </label>
+  </span>
+  <span>
+    <label for="tableDisabled">
+      <input id="tableDisabled"
+         type="checkbox" 
+         [checked]="options.tableDisabled" 
+         (click)="update('tableDisabled', $event)" />
+      Disables all table console logs
+    </label>
+  </span>
+  <span>
+    <label for="downGrade">
+      <input id="downGrade"
+         type="checkbox" 
+         [checked]="options.downGrade" 
+         (click)="update('downGrade', $event)" />
+      Downgrade a log from warning to info or log to warning, or error to log
+    </label>
+  </span>
+  <span>
+    <label for="upgrade">
+      <input id="upgrade"
+         type="checkbox" 
+         [checked]="options.upgrade" 
+         (click)="update('upgrade', $event)" />
+      Upgrades a log from info to warning or warning to log, or log to error
+    </label>
+  </span>
+
+  <label for="blockCaller">
+    Block Logs based on Caller (comma separated): 
+    <input id="blockCaller" [value]="options.blockCaller" 
+      (keyup)="keyup('blockCaller', $event)" />
+  </label>
+  <label for="suppress">
+    Suppress Logs based on keywords (comma separated): 
+    <input id="suppress" [value]="options.suppress"  
+      (keyup)="keyup('suppress', $event)"/>
+  </label>
+
+</fieldset>
+<fieldset>
+  <legend>Log Samples</legend>
+    <ul>
+      <li>log('test',1,2)</li>
+      <li>info('test',1,2)</li>
+      <li>warning('test',1,2)</li>
+      <li>error('test',1,2)</li>
+      <li>table(['test',1,2])</li>
+      <li>trace(new Error())</li>
+      <li>assert(false, "asserting test!")</li>
+      <li>make http call to invalid address that would cause exception. this will raise native log which cannot be overtaken.</li>
+    </ul>
+</fieldset>
+<div class="controller">
+    <button (click)="execute()">Execute Log Samples</button>
+    <button (click)="clear()">Clear</button>
+</div>
+<div class="note" *ngIf="data.length">
+  <ul>
+    <li *ngFor="let item of data" [innerText]="item "></li>
+  </ul>
+</div>

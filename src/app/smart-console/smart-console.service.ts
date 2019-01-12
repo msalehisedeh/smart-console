@@ -3,7 +3,8 @@
 import {Injectable, EventEmitter} from '@angular/core';
 
 export interface SmartOptions {
-	redirectOutput?: boolean,// log result in to output insted of console.
+	emitOutput?: boolean,// log result in to output insted of console.
+	logAfterEmit?: boolean, // continue logging into browser console after emitting the log
 	logDisabled?: boolean,   // disables all log level console logs
 	infoDisabled?: boolean,  // disables all info level console logs
 	warnDisabled?: boolean,  // disables all warn level console logs
@@ -69,14 +70,15 @@ export class SmartConsoleService {
 		const i = stack[3].lastIndexOf('/');
 		const n = i > 0 ? stack[3].substring(i+1).split(':')[0] : '';
 		const t = (m[1] || m[2]);
-		const caller = (t.indexOf('/') ? t.substring(0,t.indexOf('/')) : t);
+		const caller = (t.indexOf('/') > 0 ? t.substring(0,t.indexOf('/')) : t);
 		const _date = new Date();
 		const _time = (_date.getMonth() + 1) + "/" +
 					  _date.getDay() + "/" +
 					  _date.getFullYear() + " " +
 					  _date.getHours() + ":" +
 					  _date.getMinutes() + ":" +
-					  _date.getSeconds();
+					  _date.getSeconds() + ":" +
+					  _date.getMilliseconds();
 		return [_time + " [" + n + " | " + caller + "] "].concat(...args);
 	}
 	private _info(...args) {
@@ -86,14 +88,20 @@ export class SmartConsoleService {
 			const newArgs = this.options.upscale ?
 							this._upscale(args) : args;
 			if (this.options.upgrade) {
-				if (this.options.redirectOutput) {
+				if (this.options.emitOutput) {
 					this.output.emit(["log", ...newArgs]);
+					if (this.options.logAfterEmit) {
+						this.defaultLog(...newArgs);
+					}
 				} else {
 					this.defaultLog(...newArgs);
 				}
 			} else {
-				if (this.options.redirectOutput) {
+				if (this.options.emitOutput) {
 					this.output.emit(["info", ...newArgs]);
+					if (this.options.logAfterEmit) {
+						this.defaultLog(...newArgs);
+					}
 				} else {
 					this.defaultInfo(...newArgs);					
 				}
@@ -107,20 +115,29 @@ export class SmartConsoleService {
 			const newArgs = this.options.upscale ?
 							this._upscale(args) : args;
 			if (this.options.downGrade) {
-				if (this.options.redirectOutput) {
+				if (this.options.emitOutput) {
 					this.output.emit(["info", ...newArgs]);
+					if (this.options.logAfterEmit) {
+						this.defaultLog(...newArgs);
+					}
 				} else {
 					this.defaultInfo(...newArgs);					
 				}
 			} else if (this.options.upgrade) {
-				if (this.options.redirectOutput) {
+				if (this.options.emitOutput) {
 					this.output.emit(["warn", ...newArgs]);
+					if (this.options.logAfterEmit) {
+						this.defaultWarn(...newArgs);
+					}
 				} else {
 					this.defaultWarn(...newArgs);					
 				}
 			} else {
-				if (this.options.redirectOutput) {
+				if (this.options.emitOutput) {
 					this.output.emit(["log", ...newArgs]);
+					if (this.options.logAfterEmit) {
+						this.defaultLog(...newArgs);
+					}
 				} else {
 					this.defaultLog(...newArgs);					
 				}
@@ -134,20 +151,29 @@ export class SmartConsoleService {
 			const newArgs = this.options.upscale ?
 							this._upscale(args) : args;
 			if (this.options.downGrade) {
-				if (this.options.redirectOutput) {
+				if (this.options.emitOutput) {
 					this.output.emit(["log", ...newArgs]);
+					if (this.options.logAfterEmit) {
+						this.defaultLog(...newArgs);
+					}
 				} else {
 					this.defaultLog(...newArgs);					
 				}
 			} else if (this.options.upgrade) {
-				if (this.options.redirectOutput) {
+				if (this.options.emitOutput) {
 					this.output.emit(["error", ...newArgs]);
+					if (this.options.logAfterEmit) {
+						this.defaultError(...newArgs);
+					}
 				} else {
 					this.defaultError(...newArgs);					
 				}
 			} else {
-				if (this.options.redirectOutput) {
+				if (this.options.emitOutput) {
 					this.output.emit(["warn", ...newArgs]);
+					if (this.options.logAfterEmit) {
+						this.defaultWarn(...newArgs);
+					}
 				} else {
 					this.defaultWarn(...newArgs);
 				}
@@ -161,14 +187,20 @@ export class SmartConsoleService {
 			const newArgs = this.options.upscale ?
 							this._upscale(args) : args;
 			if (this.options.downGrade) {
-				if (this.options.redirectOutput) {
+				if (this.options.emitOutput) {
 					this.output.emit(["log", ...newArgs]);
+					if (this.options.logAfterEmit) {
+						this.defaultLog(...newArgs);
+					}
 				} else {
 					this.defaultLog(...newArgs);
 				}
 			} else {
-				if (this.options.redirectOutput) {
+				if (this.options.emitOutput) {
 					this.output.emit(["error", ...newArgs]);
+					if (this.options.logAfterEmit) {
+						this.defaultError(...newArgs);
+					}
 				} else {
 					this.defaultError(...newArgs);
 				}
@@ -181,8 +213,11 @@ export class SmartConsoleService {
 			!this._blocked(args)) {
 			const newArgs = this.options.upscale ?
 							this._upscale(args) : args;
-			if (this.options.redirectOutput) {
+			if (this.options.emitOutput) {
 				this.output.emit(["table", ...newArgs]);
+				if (this.options.logAfterEmit) {
+					this.defaultTable(...newArgs);
+				}
 			} else {
 				this.defaultTable(...newArgs);		
 			}
@@ -192,8 +227,11 @@ export class SmartConsoleService {
 		if ((this.options.traceDisabled === undefined || !this.options.traceDisabled)) {
 			const newArgs = this.options.upscale ?
 							this._upscale(args) : args;
-			if (this.options.redirectOutput) {
+			if (this.options.emitOutput) {
 				this.output.emit(["trace", ...newArgs]);
+				if (this.options.logAfterEmit) {
+					this.defaultTrace(...newArgs);
+				}
 			} else {
 				this.defaultTrace(...newArgs);		
 			}
@@ -201,8 +239,11 @@ export class SmartConsoleService {
 	}
 	private _assert(...args) {
 		if ((this.options.assertDisabled === undefined || !this.options.assertDisabled)) {
-			if (this.options.redirectOutput) {
+			if (this.options.emitOutput) {
 				this.output.emit(["assert", ...args]);
+				if (this.options.logAfterEmit) {
+					this.defaultAssert(...args);
+				}
 			} else {
 				this.defaultAssert(...args);		
 			}

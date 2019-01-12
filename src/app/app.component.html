@@ -17,6 +17,15 @@
     </label>
   </span>
   <span>
+    <label for="logAfterEmit">
+      <input id="logAfterEmit"
+         type="checkbox" 
+         [checked]="options.logAfterEmit" 
+         (click)="update('logAfterEmit', $event)" />
+      After sendig log to display, log it to console as well.
+    </label>
+  </span>
+  <span>
     <label for="upscale">
       <input id="upscale"
          type="checkbox" 

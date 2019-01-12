@@ -21,7 +21,8 @@ Inject the SmartConsoleService and give it the criteria you have for your applic
 ### Options
 ```javascript
 SmartOptions {
-	redirectOutput?: boolean,// log result in to output insted of console.
+	emitOutput?: boolean,// log result in to output insted of console.
+	logAfterEmit?: boolean, // continue logging into browser console after emitting the log
 	logDisabled?: boolean,  // disables all log level console logs
 	infoDisabled?: boolean, // disables all info level console logs
 	warnDisabled?: boolean, // disables all warn level console logs
@@ -54,9 +55,10 @@ import { SmartConsoleService } from '@sedeh/smart-console';
 
 ## Releases
 
-### Version 1.0.0
-initial functionality.
-
+| Version | Description                                                          |
+|---------|----------------------------------------------------------------------|
+|1.0.1    | Added functionality to log to console after emitting it.             |
+|1.0.0    | initial functionality.                                               |
 
 
 ![alt text](https://raw.githubusercontent.com/msalehisedeh/smart-console/master/sample.png  "What you would see when a smart-console sampler is used")

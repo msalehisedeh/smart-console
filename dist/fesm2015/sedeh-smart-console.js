@@ -73,7 +73,7 @@ class SmartConsoleService {
         /** @type {?} */
         const t = (m[1] || m[2]);
         /** @type {?} */
-        const caller = (t.indexOf('/') ? t.substring(0, t.indexOf('/')) : t);
+        const caller = (t.indexOf('/') > 0 ? t.substring(0, t.indexOf('/')) : t);
         /** @type {?} */
         const _date = new Date();
         /** @type {?} */
@@ -82,7 +82,8 @@ class SmartConsoleService {
             _date.getFullYear() + " " +
             _date.getHours() + ":" +
             _date.getMinutes() + ":" +
-            _date.getSeconds();
+            _date.getSeconds() + ":" +
+            _date.getMilliseconds();
         return [_time + " [" + n + " | " + caller + "] "].concat(...args);
     }
     /**
@@ -97,16 +98,22 @@ class SmartConsoleService {
             const newArgs = this.options.upscale ?
                 this._upscale(args) : args;
             if (this.options.upgrade) {
-                if (this.options.redirectOutput) {
+                if (this.options.emitOutput) {
                     this.output.emit(["log", ...newArgs]);
+                    if (this.options.logAfterEmit) {
+                        this.defaultLog(...newArgs);
+                    }
                 }
                 else {
                     this.defaultLog(...newArgs);
                 }
             }
             else {
-                if (this.options.redirectOutput) {
+                if (this.options.emitOutput) {
                     this.output.emit(["info", ...newArgs]);
+                    if (this.options.logAfterEmit) {
+                        this.defaultLog(...newArgs);
+                    }
                 }
                 else {
                     this.defaultInfo(...newArgs);
@@ -126,24 +133,33 @@ class SmartConsoleService {
             const newArgs = this.options.upscale ?
                 this._upscale(args) : args;
             if (this.options.downGrade) {
-                if (this.options.redirectOutput) {
+                if (this.options.emitOutput) {
                     this.output.emit(["info", ...newArgs]);
+                    if (this.options.logAfterEmit) {
+                        this.defaultLog(...newArgs);
+                    }
                 }
                 else {
                     this.defaultInfo(...newArgs);
                 }
             }
             else if (this.options.upgrade) {
-                if (this.options.redirectOutput) {
+                if (this.options.emitOutput) {
                     this.output.emit(["warn", ...newArgs]);
+                    if (this.options.logAfterEmit) {
+                        this.defaultWarn(...newArgs);
+                    }
                 }
                 else {
                     this.defaultWarn(...newArgs);
                 }
             }
             else {
-                if (this.options.redirectOutput) {
+                if (this.options.emitOutput) {
                     this.output.emit(["log", ...newArgs]);
+                    if (this.options.logAfterEmit) {
+                        this.defaultLog(...newArgs);
+                    }
                 }
                 else {
                     this.defaultLog(...newArgs);
@@ -163,24 +179,33 @@ class SmartConsoleService {
             const newArgs = this.options.upscale ?
                 this._upscale(args) : args;
             if (this.options.downGrade) {
-                if (this.options.redirectOutput) {
+                if (this.options.emitOutput) {
                     this.output.emit(["log", ...newArgs]);
+                    if (this.options.logAfterEmit) {
+                        this.defaultLog(...newArgs);
+                    }
                 }
                 else {
                     this.defaultLog(...newArgs);
                 }
             }
             else if (this.options.upgrade) {
-                if (this.options.redirectOutput) {
+                if (this.options.emitOutput) {
                     this.output.emit(["error", ...newArgs]);
+                    if (this.options.logAfterEmit) {
+                        this.defaultError(...newArgs);
+                    }
                 }
                 else {
                     this.defaultError(...newArgs);
                 }
             }
             else {
-                if (this.options.redirectOutput) {
+                if (this.options.emitOutput) {
                     this.output.emit(["warn", ...newArgs]);
+                    if (this.options.logAfterEmit) {
+                        this.defaultWarn(...newArgs);
+                    }
                 }
                 else {
                     this.defaultWarn(...newArgs);
@@ -200,16 +225,22 @@ class SmartConsoleService {
             const newArgs = this.options.upscale ?
                 this._upscale(args) : args;
             if (this.options.downGrade) {
-                if (this.options.redirectOutput) {
+                if (this.options.emitOutput) {
                     this.output.emit(["log", ...newArgs]);
+                    if (this.options.logAfterEmit) {
+                        this.defaultLog(...newArgs);
+                    }
                 }
                 else {
                     this.defaultLog(...newArgs);
                 }
             }
             else {
-                if (this.options.redirectOutput) {
+                if (this.options.emitOutput) {
                     this.output.emit(["error", ...newArgs]);
+                    if (this.options.logAfterEmit) {
+                        this.defaultError(...newArgs);
+                    }
                 }
                 else {
                     this.defaultError(...newArgs);
@@ -228,8 +259,11 @@ class SmartConsoleService {
             /** @type {?} */
             const newArgs = this.options.upscale ?
                 this._upscale(args) : args;
-            if (this.options.redirectOutput) {
+            if (this.options.emitOutput) {
                 this.output.emit(["table", ...newArgs]);
+                if (this.options.logAfterEmit) {
+                    this.defaultTable(...newArgs);
+                }
             }
             else {
                 this.defaultTable(...newArgs);
@@ -245,8 +279,11 @@ class SmartConsoleService {
             /** @type {?} */
             const newArgs = this.options.upscale ?
                 this._upscale(args) : args;
-            if (this.options.redirectOutput) {
+            if (this.options.emitOutput) {
                 this.output.emit(["trace", ...newArgs]);
+                if (this.options.logAfterEmit) {
+                    this.defaultTrace(...newArgs);
+                }
             }
             else {
                 this.defaultTrace(...newArgs);
@@ -259,8 +296,11 @@ class SmartConsoleService {
      */
     _assert(...args) {
         if ((this.options.assertDisabled === undefined || !this.options.assertDisabled)) {
-            if (this.options.redirectOutput) {
+            if (this.options.emitOutput) {
                 this.output.emit(["assert", ...args]);
+                if (this.options.logAfterEmit) {
+                    this.defaultAssert(...args);
+                }
             }
             else {
                 this.defaultAssert(...args);

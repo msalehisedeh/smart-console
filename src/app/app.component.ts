@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import { SmartConsoleService } from './smart-console/smart-console.service';
 
@@ -15,6 +15,7 @@ export class AppComponent {
 
   options = {
     output: true,
+    logAfterEmit: false,
     logDisabled: false,
     infoDisabled: false,
     warnDisabled: false,
@@ -34,7 +35,7 @@ export class AppComponent {
     private smartService: SmartConsoleService
   ) {
     this.smartService.makeSmartLogs({
-      redirectOutput: true,
+      emitOutput: true,
       upscale: true
     });
     this.smartService.redirectedOutput().subscribe(
@@ -90,7 +91,10 @@ export class AppComponent {
       newOptions['upscale'] = true;
     }
     if (this.options.output) {
-      newOptions['redirectOutput'] = true;
+      newOptions['emitOutput'] = true;
+    }
+    if (this.options.logAfterEmit) {
+      newOptions['logAfterEmit'] = true;
     }
     if (this.options.blockCaller) {
       newOptions['blockCaller'] = this.options.blockCaller.split(',');
@@ -105,7 +109,7 @@ export class AppComponent {
     console.warn("test","1","2");
     console.error("test","1","2");
     console.table(["test","1","2"]);
-    console.trace(new Error());
+    console.trace(new Error().stack);
     console.assert(false, "asserting test!");
     this.http.get("https://api.flickr.com/services/rest/?&method=flickr.people.getPublicPhotos&format=json&api_key=API_KEY&user_id=USER_ID").subscribe(
       (success) => {

@@ -1,6 +1,7 @@
 import { EventEmitter } from '@angular/core';
 export interface SmartOptions {
-    redirectOutput?: boolean;
+    emitOutput?: boolean;
+    logAfterEmit?: boolean;
     logDisabled?: boolean;
     infoDisabled?: boolean;
     warnDisabled?: boolean;

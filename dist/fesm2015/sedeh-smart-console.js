@@ -327,6 +327,64 @@ class SmartConsoleService {
     redirectedOutput() {
         return this.output;
     }
+    /**
+     * @param {?} args
+     * @return {?}
+     */
+    markupTrace(args) {
+        if (args instanceof Array) {
+            args.map((item, index) => {
+                if (typeof item === 'string') {
+                    if ((item.indexOf('@') > -1 || item.indexOf('(') > -1) && item.indexOf(':') > 0 && item.indexOf('\n') > 0) {
+                        /** @type {?} */
+                        const list = [];
+                        item.split('\n').map((line) => {
+                            /** @type {?} */
+                            const x = line.indexOf('@');
+                            /** @type {?} */
+                            const z = line.indexOf('(');
+                            if (z > 0) {
+                                /** @type {?} */
+                                const sublist = line.substring(z + 1, line.length - 1).split(':');
+                                /** @type {?} */
+                                const len = sublist.length;
+                                /** @type {?} */
+                                const name = line.substring(0, z) + ':' + sublist[len - 2] + ':' + sublist[len - 1];
+                                /** @type {?} */
+                                const ref = sublist.slice(0, len - 2).join(':');
+                                list.push('<a href="' + ref + '">' + name + '</a>');
+                            }
+                            else if (x >= 0) {
+                                /** @type {?} */
+                                const y = line.indexOf(':');
+                                if (y < 0) {
+                                    list.push('<a href="' + line.substring(x + 1) + '">' +
+                                        line.substring(0, x) +
+                                        '</a>');
+                                }
+                                else {
+                                    /** @type {?} */
+                                    const sublist = line.substring(x + 1, line.length).split(':');
+                                    /** @type {?} */
+                                    const len = sublist.length;
+                                    /** @type {?} */
+                                    const name = line.substring(0, x) + ':' + sublist[len - 2] + ':' + sublist[len - 1];
+                                    /** @type {?} */
+                                    const ref = sublist.slice(0, len - 2).join(':');
+                                    list.push('<a href="' + ref + '">' + name + '</a>');
+                                }
+                            }
+                            else {
+                                list.push(line);
+                            }
+                        });
+                        args[index] = list.join('<br />');
+                    }
+                }
+            });
+        }
+        return args;
+    }
 }
 SmartConsoleService.decorators = [
     { type: Injectable }

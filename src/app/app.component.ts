@@ -26,8 +26,8 @@ export class AppComponent {
     downGrade: false,
     upgrade: false,
     upscale: true,  
-    blockCaller: 'zone',
-    suppress: ''
+    blockCaller: 'core.js,Zone.ts,MyComponent.ts',
+    suppress: 'test3,test4'
   };
 
   constructor(
@@ -40,7 +40,7 @@ export class AppComponent {
     });
     this.smartService.redirectedOutput().subscribe(
       (event) => {
-        this.data.push(event);
+        this.data.push(this.smartService.markupTrace(event));
       }
     );
   }
@@ -106,8 +106,11 @@ export class AppComponent {
 
     console.log("test","1","2");
     console.info("test","1","2");
+    console.info("test2","1","2");
     console.warn("test","1","2");
+    console.warn("test3","1","2");
     console.error("test","1","2");
+    console.error("test4","1","2");
     console.table(["test","1","2"]);
     console.trace(new Error().stack);
     console.assert(false, "asserting test!");

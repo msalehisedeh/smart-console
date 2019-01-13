@@ -37,4 +37,5 @@ export declare class SmartConsoleService {
     private _assert(...args);
     makeSmartLogs(instructions: SmartOptions): void;
     redirectedOutput(): EventEmitter<{}>;
+    markupTrace(args: any): any;
 }

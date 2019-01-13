@@ -4,6 +4,14 @@
     background-color: #888;
     color: #fff;
     box-sizing: border-box;
+    ::ng-deep ul {
+        li {
+            a {
+                color: #fff !important;
+                cursor: pointer;
+            }
+        }
+    }
 }
 fieldset {
     display: grid;

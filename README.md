@@ -16,6 +16,7 @@ Inject the SmartConsoleService and give it the criteria you have for your applic
 |------------------|----------------------------------------------------------------------|
 | makeSmartLogs    | Will override console log with given optiond. You could setup options in your environment variables and call this method to set your logs based on deployment stage. Or setup any one of the option attributes at anytime. But remember that the setting is global per appllication. |
 | redirectedOutput | Will return event emitter that emits logs if redirectOutput flag of options is set. |
+| markupTrace      | Will markup stacktrace from list of plain text to a list of clickable links.        |
 
 
 ### Options
@@ -46,7 +47,7 @@ import { SmartConsoleService } from '@sedeh/smart-console';
     this.smartService.makeSmartLogs(this.options);
     this.smartService.redirectedOutput().subscribe(
       (event) => {
-        this.myLogView.push(event);
+        this.myLogView.push(this.smartService.markupTrace(event));
       }
     );
   }
@@ -57,6 +58,7 @@ import { SmartConsoleService } from '@sedeh/smart-console';
 
 | Version | Description                                                          |
 |---------|----------------------------------------------------------------------|
+|1.0.2    | Added functionality to convert stack trace to a link.                |
 |1.0.1    | Added functionality to log to console after emitting it.             |
 |1.0.0    | initial functionality.                                               |
 

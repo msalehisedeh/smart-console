@@ -133,8 +133,11 @@
     <ul>
       <li>log('test',1,2)</li>
       <li>info('test',1,2)</li>
+      <li>info('test2',1,2)</li>
       <li>warning('test',1,2)</li>
+      <li>warning('test3',1,2)</li>
       <li>error('test',1,2)</li>
+      <li>error('test4',1,2)</li>
       <li>table(['test',1,2])</li>
       <li>trace(new Error())</li>
       <li>assert(false, "asserting test!")</li>
@@ -147,6 +150,6 @@
 </div>
 <div class="note" *ngIf="data.length">
   <ul>
-    <li *ngFor="let item of data" [innerText]="item "></li>
+    <li *ngFor="let item of data" [innerHTML]="item "></li>
   </ul>
 </div>

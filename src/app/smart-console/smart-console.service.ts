@@ -249,6 +249,10 @@ export class SmartConsoleService {
 			}
 		}
 	}
+	/*
+	* Will initialize smart logger.
+	* @instructions instructions to direct this service to suppress logs.
+	*/
 	makeSmartLogs( instructions: SmartOptions ) {
 		this.options = instructions;
 		console.log = this._log.bind(this);
@@ -259,7 +263,60 @@ export class SmartConsoleService {
 		console.trace = this._trace.bind(this);
 		console.assert = this._assert.bind(this);
 	}
+	/*
+	* @return Event Emitter that may publisg logs.
+	*/
 	redirectedOutput() {
 		return this.output;
+	}
+	/*
+	* Will markup stack trace to provide HTML fragment with anchors foe every trace.
+	* @args argument that may contail stack trace.
+	* @return A more formal content with html fragment if stack travce applied ib advance.
+	*/
+	markupTrace(args: any) {
+		if (args instanceof Array) {
+			args.map(
+				(item: any, index: number) => {
+					if (typeof item === 'string') {
+						if ((item.indexOf('@') > -1 || item.indexOf('(') > -1) && item.indexOf(':') > 0 && item.indexOf('\n') > 0) {
+							const list = [];
+							item.split('\n').map(
+								(line: string) => {
+									const x = line.indexOf('@');
+									const z = line.indexOf('(');
+									if (z > 0) {
+										const sublist = line.substring(z+1, line.length - 1).split(':');
+										const len = sublist.length;
+										const name = line.substring(0, z) + ':' + sublist[len - 2] + ':' + sublist[len - 1];
+										const ref = sublist.slice(0, len - 2).join(':');
+
+										list.push('<a href="' + ref +  '">' + name + '</a>');
+									} else if (x >= 0) {
+										const y = line.indexOf(':');
+										if (y < 0 ) {
+											list.push('<a href="' + line.substring(x+1) +  '">' +
+											line.substring(0, x) +
+											'</a>');
+										} else {
+											const sublist = line.substring(x+1, line.length).split(':');
+											const len = sublist.length;
+											const name = line.substring(0, x) + ':' + sublist[len - 2] + ':' + sublist[len - 1];
+											const ref = sublist.slice(0, len - 2).join(':');
+											
+											list.push('<a href="' + ref +  '">' + name + '</a>');
+										}
+									} else {
+										list.push(line);
+									}
+								}
+							);
+							args[index] = list.join('<br />');
+						}
+					}
+				}
+			);
+		}
+		return args;
 	}
 }

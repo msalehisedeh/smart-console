@@ -389,6 +389,10 @@ var SmartConsoleService = /** @class */ (function () {
             }
         }
     };
+    /*
+    * Will initialize smart logger.
+    * @instructions instructions to direct this service to suppress logs.
+    */
     /**
      * @param {?} instructions
      * @return {?}
@@ -407,6 +411,9 @@ var SmartConsoleService = /** @class */ (function () {
         console.trace = this._trace.bind(this);
         console.assert = this._assert.bind(this);
     };
+    /*
+    * @return Event Emitter that may publisg logs.
+    */
     /**
      * @return {?}
      */
@@ -415,6 +422,73 @@ var SmartConsoleService = /** @class */ (function () {
      */
     function () {
         return this.output;
+    };
+    /*
+    * Will markup stack trace to provide HTML fragment with anchors foe every trace.
+    * @args argument that may contail stack trace.
+    * @return A more formal content with html fragment if stack travce applied ib advance.
+    */
+    /**
+     * @param {?} args
+     * @return {?}
+     */
+    SmartConsoleService.prototype.markupTrace = /**
+     * @param {?} args
+     * @return {?}
+     */
+    function (args) {
+        if (args instanceof Array) {
+            args.map(function (item, index) {
+                if (typeof item === 'string') {
+                    if ((item.indexOf('@') > -1 || item.indexOf('(') > -1) && item.indexOf(':') > 0 && item.indexOf('\n') > 0) {
+                        /** @type {?} */
+                        var list_1 = [];
+                        item.split('\n').map(function (line) {
+                            /** @type {?} */
+                            var x = line.indexOf('@');
+                            /** @type {?} */
+                            var z = line.indexOf('(');
+                            if (z > 0) {
+                                /** @type {?} */
+                                var sublist = line.substring(z + 1, line.length - 1).split(':');
+                                /** @type {?} */
+                                var len = sublist.length;
+                                /** @type {?} */
+                                var name_1 = line.substring(0, z) + ':' + sublist[len - 2] + ':' + sublist[len - 1];
+                                /** @type {?} */
+                                var ref = sublist.slice(0, len - 2).join(':');
+                                list_1.push('<a href="' + ref + '">' + name_1 + '</a>');
+                            }
+                            else if (x >= 0) {
+                                /** @type {?} */
+                                var y = line.indexOf(':');
+                                if (y < 0) {
+                                    list_1.push('<a href="' + line.substring(x + 1) + '">' +
+                                        line.substring(0, x) +
+                                        '</a>');
+                                }
+                                else {
+                                    /** @type {?} */
+                                    var sublist = line.substring(x + 1, line.length).split(':');
+                                    /** @type {?} */
+                                    var len = sublist.length;
+                                    /** @type {?} */
+                                    var name_2 = line.substring(0, x) + ':' + sublist[len - 2] + ':' + sublist[len - 1];
+                                    /** @type {?} */
+                                    var ref = sublist.slice(0, len - 2).join(':');
+                                    list_1.push('<a href="' + ref + '">' + name_2 + '</a>');
+                                }
+                            }
+                            else {
+                                list_1.push(line);
+                            }
+                        });
+                        args[index] = list_1.join('<br />');
+                    }
+                }
+            });
+        }
+        return args;
     };
     SmartConsoleService.decorators = [
         { type: Injectable }

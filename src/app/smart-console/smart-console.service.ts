@@ -48,14 +48,28 @@ export class SmartConsoleService {
 		}
 		return result;
 	}
+	private _getStack() {
+		// this method purpose is only to fix IE issue. 
+		// in IE, new Error().stack  will be undefined
+		// unless it is caugth in try block statement.
+		let stack: any = '';
+		try {
+		  throw new Error('getStack');
+		} catch(e) {
+			stack = e.stack;
+			stack = stack.indexOf('\r') > 0 ? stack.indexOf('\r') : stack.split('\n');
+			stack = stack[4];
+		}
+		return stack;
+	}
 	private _blocked(...args) {
 		let result = false;
 
 		if (this.options.blockCaller) {
-			const stack = new Error().stack.split('\n');
+			const stack = this._getStack();
 			this.options.blockCaller.map(
 				(item) => {
-					if (stack[3].indexOf(item) > -1) {
+					if (stack.indexOf(item) > -1) {
 						result = true;
 					}
 				}
@@ -64,13 +78,13 @@ export class SmartConsoleService {
 		return result;
 	}
 	private _upscale(...args) {
-		const stack = new Error().stack.split('\n');
+		const stack = this._getStack();
 		const re = /([^(]+)@|at ([^(]+) \(/g;
-		const m = re.exec(stack[3]);
-		const i = stack[3].lastIndexOf('/');
-		const n = i > 0 ? stack[3].substring(i+1).split(':')[0] : '';
-		const t = (m[1] || m[2]);
-		const caller = (t.indexOf('/') > 0 ? t.substring(0,t.indexOf('/')) : t);
+		const m = re.exec(stack);
+		const i = stack.lastIndexOf('/');
+		const n = i > 0 ? stack.substring(i+1).split(':')[0] : stack;
+		const t = m ? (m[1] || m[2]) : stack;
+		const caller = (t.indexOf('/') > 0 ? t.substring(0,t.indexOf('/')) : '');
 		const _date = new Date();
 		const _time = (_date.getMonth() + 1) + "/" +
 					  _date.getDay() + "/" +
@@ -79,7 +93,7 @@ export class SmartConsoleService {
 					  _date.getMinutes() + ":" +
 					  _date.getSeconds() + ":" +
 					  _date.getMilliseconds();
-		return [_time + " [" + n + " | " + caller + "] "].concat(...args);
+		return [_time + " [" + n + (caller ? " | " + caller : '') + "] "].concat(...args);
 	}
 	private _info(...args) {
 		if ((this.options.infoDisabled === undefined || !this.options.infoDisabled) &&
@@ -279,9 +293,10 @@ export class SmartConsoleService {
 			args.map(
 				(item: any, index: number) => {
 					if (typeof item === 'string') {
-						if ((item.indexOf('@') > -1 || item.indexOf('(') > -1) && item.indexOf(':') > 0 && item.indexOf('\n') > 0) {
+						const breakOn = (item.indexOf('\n') > 0) ? '\n' : ((item.indexOf('\r') > 0) ? '\r' : undefined);
+						if (breakOn && (item.indexOf('@') > -1 || item.indexOf('(') > -1) && item.indexOf(':') > 0) {
 							const list = [];
-							item.split('\n').map(
+							item.split(breakOn).map(
 								(line: string) => {
 									const x = line.indexOf('@');
 									const z = line.indexOf('(');
@@ -312,6 +327,8 @@ export class SmartConsoleService {
 								}
 							);
 							args[index] = list.join('<br />');
+						} else if (breakOn) {
+							args[index] = item.replace(/\r\n/g,'<br />');
 						}
 					}
 				}

@@ -38,6 +38,22 @@ class SmartConsoleService {
         return result;
     }
     /**
+     * @return {?}
+     */
+    _getStack() {
+        /** @type {?} */
+        let stack = '';
+        try {
+            throw new Error('getStack');
+        }
+        catch (e) {
+            stack = e.stack;
+            stack = stack.indexOf('\r') > 0 ? stack.indexOf('\r') : stack.split('\n');
+            stack = stack[4];
+        }
+        return stack;
+    }
+    /**
      * @param {...?} args
      * @return {?}
      */
@@ -46,9 +62,9 @@ class SmartConsoleService {
         let result = false;
         if (this.options.blockCaller) {
             /** @type {?} */
-            const stack = new Error().stack.split('\n');
+            const stack = this._getStack();
             this.options.blockCaller.map((item) => {
-                if (stack[3].indexOf(item) > -1) {
+                if (stack.indexOf(item) > -1) {
                     result = true;
                 }
             });
@@ -61,19 +77,19 @@ class SmartConsoleService {
      */
     _upscale(...args) {
         /** @type {?} */
-        const stack = new Error().stack.split('\n');
+        const stack = this._getStack();
         /** @type {?} */
         const re = /([^(]+)@|at ([^(]+) \(/g;
         /** @type {?} */
-        const m = re.exec(stack[3]);
+        const m = re.exec(stack);
         /** @type {?} */
-        const i = stack[3].lastIndexOf('/');
+        const i = stack.lastIndexOf('/');
         /** @type {?} */
-        const n = i > 0 ? stack[3].substring(i + 1).split(':')[0] : '';
+        const n = i > 0 ? stack.substring(i + 1).split(':')[0] : stack;
         /** @type {?} */
-        const t = (m[1] || m[2]);
+        const t = m ? (m[1] || m[2]) : stack;
         /** @type {?} */
-        const caller = (t.indexOf('/') > 0 ? t.substring(0, t.indexOf('/')) : t);
+        const caller = (t.indexOf('/') > 0 ? t.substring(0, t.indexOf('/')) : '');
         /** @type {?} */
         const _date = new Date();
         /** @type {?} */
@@ -84,7 +100,7 @@ class SmartConsoleService {
             _date.getMinutes() + ":" +
             _date.getSeconds() + ":" +
             _date.getMilliseconds();
-        return [_time + " [" + n + " | " + caller + "] "].concat(...args);
+        return [_time + " [" + n + (caller ? " | " + caller : '') + "] "].concat(...args);
     }
     /**
      * @param {...?} args
@@ -335,10 +351,12 @@ class SmartConsoleService {
         if (args instanceof Array) {
             args.map((item, index) => {
                 if (typeof item === 'string') {
-                    if ((item.indexOf('@') > -1 || item.indexOf('(') > -1) && item.indexOf(':') > 0 && item.indexOf('\n') > 0) {
+                    /** @type {?} */
+                    const breakOn = (item.indexOf('\n') > 0) ? '\n' : ((item.indexOf('\r') > 0) ? '\r' : undefined);
+                    if (breakOn && (item.indexOf('@') > -1 || item.indexOf('(') > -1) && item.indexOf(':') > 0) {
                         /** @type {?} */
                         const list = [];
-                        item.split('\n').map((line) => {
+                        item.split(breakOn).map((line) => {
                             /** @type {?} */
                             const x = line.indexOf('@');
                             /** @type {?} */
@@ -379,6 +397,9 @@ class SmartConsoleService {
                             }
                         });
                         args[index] = list.join('<br />');
+                    }
+                    else if (breakOn) {
+                        args[index] = item.replace(/\r\n/g, '<br />');
                     }
                 }
             });

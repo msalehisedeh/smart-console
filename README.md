@@ -58,6 +58,7 @@ import { SmartConsoleService } from '@sedeh/smart-console';
 
 | Version | Description                                                          |
 |---------|----------------------------------------------------------------------|
+|1.0.3    | Fixed issues on Safari and IE11 browsers.                            |
 |1.0.2    | Added functionality to convert stack trace to a link.                |
 |1.0.1    | Added functionality to log to console after emitting it.             |
 |1.0.0    | initial functionality.                                               |

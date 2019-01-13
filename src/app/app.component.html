@@ -4,7 +4,11 @@
     Welcome to {{ title }}!
   </h1>
 </div>
-
+<div  class="resources">
+  <a href="https://www.npmjs.com/package/@sedeh/smart-console">npm install @sedeh/smart-console</a>
+  <p>Tested On Safari, Chrome, Mozilla, and IE11 browsers.</p>
+</div>
+  
 <fieldset>
   <legend>Options</legend>
   <span>
@@ -115,18 +119,20 @@
       Upgrades a log from info to warning or warning to log, or log to error
     </label>
   </span>
-
-  <label for="blockCaller">
-    Block Logs based on Caller (comma separated): 
-    <input id="blockCaller" [value]="options.blockCaller" 
-      (keyup)="keyup('blockCaller', $event)" />
-  </label>
-  <label for="suppress">
-    Suppress Logs based on keywords (comma separated): 
-    <input id="suppress" [value]="options.suppress"  
-      (keyup)="keyup('suppress', $event)"/>
-  </label>
-
+  <span>
+    <label for="blockCaller">
+      Block Logs based on Caller (comma separated): 
+      <input id="blockCaller" [value]="options.blockCaller" 
+        (keyup)="keyup('blockCaller', $event)" />
+    </label>
+  </span>
+  <span>
+    <label for="suppress">
+      Suppress Logs based on keywords (comma separated): 
+      <input id="suppress" [value]="options.suppress"  
+        (keyup)="keyup('suppress', $event)"/>
+    </label>
+  </span>
 </fieldset>
 <fieldset>
   <legend>Log Samples</legend>

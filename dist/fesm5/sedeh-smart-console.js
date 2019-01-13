@@ -47,6 +47,25 @@ var SmartConsoleService = /** @class */ (function () {
         return result;
     };
     /**
+     * @return {?}
+     */
+    SmartConsoleService.prototype._getStack = /**
+     * @return {?}
+     */
+    function () {
+        /** @type {?} */
+        var stack = '';
+        try {
+            throw new Error('getStack');
+        }
+        catch (e) {
+            stack = e.stack;
+            stack = stack.indexOf('\r') > 0 ? stack.indexOf('\r') : stack.split('\n');
+            stack = stack[4];
+        }
+        return stack;
+    };
+    /**
      * @param {...?} args
      * @return {?}
      */
@@ -63,9 +82,9 @@ var SmartConsoleService = /** @class */ (function () {
         var result = false;
         if (this.options.blockCaller) {
             /** @type {?} */
-            var stack_1 = new Error().stack.split('\n');
+            var stack_1 = this._getStack();
             this.options.blockCaller.map(function (item) {
-                if (stack_1[3].indexOf(item) > -1) {
+                if (stack_1.indexOf(item) > -1) {
                     result = true;
                 }
             });
@@ -86,19 +105,19 @@ var SmartConsoleService = /** @class */ (function () {
             args[_i] = arguments[_i];
         }
         /** @type {?} */
-        var stack = new Error().stack.split('\n');
+        var stack = this._getStack();
         /** @type {?} */
         var re = /([^(]+)@|at ([^(]+) \(/g;
         /** @type {?} */
-        var m = re.exec(stack[3]);
+        var m = re.exec(stack);
         /** @type {?} */
-        var i = stack[3].lastIndexOf('/');
+        var i = stack.lastIndexOf('/');
         /** @type {?} */
-        var n = i > 0 ? stack[3].substring(i + 1).split(':')[0] : '';
+        var n = i > 0 ? stack.substring(i + 1).split(':')[0] : stack;
         /** @type {?} */
-        var t = (m[1] || m[2]);
+        var t = m ? (m[1] || m[2]) : stack;
         /** @type {?} */
-        var caller = (t.indexOf('/') > 0 ? t.substring(0, t.indexOf('/')) : t);
+        var caller = (t.indexOf('/') > 0 ? t.substring(0, t.indexOf('/')) : '');
         /** @type {?} */
         var _date = new Date();
         /** @type {?} */
@@ -109,7 +128,7 @@ var SmartConsoleService = /** @class */ (function () {
             _date.getMinutes() + ":" +
             _date.getSeconds() + ":" +
             _date.getMilliseconds();
-        return (_a = [_time + " [" + n + " | " + caller + "] "]).concat.apply(_a, __spread(args));
+        return (_a = [_time + " [" + n + (caller ? " | " + caller : '') + "] "]).concat.apply(_a, __spread(args));
         var _a;
     };
     /**
@@ -440,10 +459,12 @@ var SmartConsoleService = /** @class */ (function () {
         if (args instanceof Array) {
             args.map(function (item, index) {
                 if (typeof item === 'string') {
-                    if ((item.indexOf('@') > -1 || item.indexOf('(') > -1) && item.indexOf(':') > 0 && item.indexOf('\n') > 0) {
+                    /** @type {?} */
+                    var breakOn = (item.indexOf('\n') > 0) ? '\n' : ((item.indexOf('\r') > 0) ? '\r' : undefined);
+                    if (breakOn && (item.indexOf('@') > -1 || item.indexOf('(') > -1) && item.indexOf(':') > 0) {
                         /** @type {?} */
                         var list_1 = [];
-                        item.split('\n').map(function (line) {
+                        item.split(breakOn).map(function (line) {
                             /** @type {?} */
                             var x = line.indexOf('@');
                             /** @type {?} */
@@ -484,6 +505,9 @@ var SmartConsoleService = /** @class */ (function () {
                             }
                         });
                         args[index] = list_1.join('<br />');
+                    }
+                    else if (breakOn) {
+                        args[index] = item.replace(/\r\n/g, '<br />');
                     }
                 }
             });

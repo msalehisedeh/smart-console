@@ -112,7 +112,8 @@ export class AppComponent {
     console.error("test","1","2");
     console.error("test4","1","2");
     console.table(["test","1","2"]);
-    console.trace(new Error().stack);
+
+    this._trace();
     console.assert(false, "asserting test!");
     this.http.get("https://api.flickr.com/services/rest/?&method=flickr.people.getPublicPhotos&format=json&api_key=API_KEY&user_id=USER_ID").subscribe(
       (success) => {
@@ -131,5 +132,14 @@ export class AppComponent {
       }
     )
   }
-
+	private _trace() {
+		// this method purpose is only to fix IE issue. 
+		// in IE, new Error().stack  will be undefined
+		// unless it is caugth in try block statement.
+		try {
+		  throw new Error('testing trace log');
+		} catch(e) {
+      console.trace(e.stack);
+		}
+	  }
 }

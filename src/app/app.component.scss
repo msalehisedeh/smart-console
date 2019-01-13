@@ -14,8 +14,14 @@
     }
 }
 fieldset {
-    display: grid;
+    span {
+      display: block;
+    }
 }
 .controller {
     text-align: center;
+}
+.resources {
+  text-align: center;
+  margin-bottom: 20px;
 }

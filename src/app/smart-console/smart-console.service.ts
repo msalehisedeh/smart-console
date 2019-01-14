@@ -328,7 +328,7 @@ export class SmartConsoleService {
 							);
 							args[index] = list.join('<br />');
 						} else if (breakOn) {
-							args[index] = item.replace(/\r\n/g,'<br />');
+							args[index] = item.split(breakOn).join('<br />');
 						}
 					}
 				}

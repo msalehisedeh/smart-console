@@ -507,7 +507,7 @@ var SmartConsoleService = /** @class */ (function () {
                         args[index] = list_1.join('<br />');
                     }
                     else if (breakOn) {
-                        args[index] = item.replace(/\r\n/g, '<br />');
+                        args[index] = item.split(breakOn).join('<br />');
                     }
                 }
             });

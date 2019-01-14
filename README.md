@@ -14,15 +14,15 @@ Inject the SmartConsoleService and give it the criteria you have for your applic
 
 | Method           | Description                                                          |
 |------------------|----------------------------------------------------------------------|
-| makeSmartLogs    | Will override console log with given optiond. You could setup options in your environment variables and call this method to set your logs based on deployment stage. Or setup any one of the option attributes at anytime. But remember that the setting is global per appllication. |
+| makeSmartLogs    | Will override console log with given options. You could set-up options in your environment variables and call this method to set your logs based on deployment stage. Or set-up any one of the option attributes at any-time. But remember that the setting is global per application. |
 | redirectedOutput | Will return event emitter that emits logs if redirectOutput flag of options is set. |
-| markupTrace      | Will markup stacktrace from list of plain text to a list of clickable links.        |
+| markupTrace      | Will mark-up stack trace from list of plain text to a list of click-able links.        |
 
 
 ### Options
 ```javascript
 SmartOptions {
-	emitOutput?: boolean,// log result in to output insted of console.
+	emitOutput?: boolean,// log result in to output instead of console.
 	logAfterEmit?: boolean, // continue logging into browser console after emitting the log
 	logDisabled?: boolean,  // disables all log level console logs
 	infoDisabled?: boolean, // disables all info level console logs
@@ -58,7 +58,7 @@ import { SmartConsoleService } from '@sedeh/smart-console';
 
 | Version | Description                                                          |
 |---------|----------------------------------------------------------------------|
-|1.0.4    | breal lines on trace for Safari.                                     |
+|1.0.4    | break lines on trace for Safari.                                     |
 |1.0.3    | Fixed issues on Safari and IE11 browsers.                            |
 |1.0.2    | Added functionality to convert stack trace to a link.                |
 |1.0.1    | Added functionality to log to console after emitting it.             |

@@ -145,16 +145,16 @@
 <fieldset>
   <legend>Log Samples</legend>
     <ul>
-      <li>log('test',1,2)</li>
-      <li>info('test',1,2)</li>
-      <li>info('test2',1,2)</li>
-      <li>warning('test',1,2)</li>
-      <li>warning('test3',1,2)</li>
-      <li>error('test',1,2)</li>
-      <li>error('test4',1,2)</li>
-      <li>table(['test',1,2])</li>
-      <li>trace(new Error())</li>
-      <li>assert(false, "asserting test!")</li>
+      <li>console.log('test',1,2)</li>
+      <li>console.info('test',1, json)</li>
+      <li>console.info('test2',1,2)</li>
+      <li>console.warning('test',1,2)</li>
+      <li>console.warning('test3',1,2)</li>
+      <li>console.error('test',1,2)</li>
+      <li>console.error('test4',1,2)</li>
+      <li>console.table(['test',1,2])</li>
+      <li>console.trace(new Error())</li>
+      <li>console.assert(false, "asserting test!")</li>
       <li>make http call to invalid address that would cause exception. this will raise native log which cannot be overtaken.</li>
     </ul>
 </fieldset>
@@ -163,5 +163,5 @@
     <button (click)="clear()">Clear</button>
 </div>
 <div class="note" *ngIf="data.length">
-  <ul><li *ngFor="let item of data" [innerHTML]="item "></li></ul>
+  <ul><li *ngFor="let item of data" [innerHTML]="item"></li></ul>
 </div>

@@ -26,6 +26,7 @@ export declare class SmartConsoleService {
     private defaultAssert;
     private output;
     private watchList;
+    private _argsToString(args);
     private _suppressed(...args);
     private _getStack();
     private _blocked(...args);

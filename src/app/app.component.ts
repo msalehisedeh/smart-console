@@ -113,7 +113,10 @@ export class AppComponent {
         (key) => {
           const sbc = this.smartService.addWatch(key).subscribe(
             (event) => {
-              this.data.push("Watch for '" + key + "' is reporting log:" + event.toString());
+              this.data.push("Watch for '" + key +
+                            "' is reporting log:" +
+                            (typeof event==='object' ? JSON.stringify(event) : event) 
+                        );
             }
           );
           this.subscribers.push(sbc);
@@ -125,7 +128,7 @@ export class AppComponent {
     }
 
     console.log("test","1","2");
-    console.info("test","1","2");
+    console.info("test","1",{'x': 1, 'y': 'sanitizing', 'z': []});
     console.info("test2","1","2");
     console.warn("test","1","2");
     console.warn("test3","1","2");

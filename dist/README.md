@@ -12,14 +12,14 @@ You can use this tool to have your application do all of that and maybe a bit mo
 ## How to use?
 Inject the SmartConsoleService and give it the criteria you have for your application and let it all flow the way you have envisioned it.
 
-| Method           | Description                                                          |
-|------------------|----------------------------------------------------------------------|
-| makeSmartLogs    | Will override console log with given options. You could set-up options in your environment variables and call this method to set your logs based on deployment stage. Or set-up any one of the option attributes at any-time. But remember that the setting is global per application. |
-| redirectedOutput | Will return event emitter that emits logs if redirectOutput flag of options is set. |
-| markupTrace      | Will mark-up stack trace from list of plain text to a list of click-able links.     |
-| addWatch         | Will watch for existance of a particular key in a log.                              |
-| removeWatch      | Will remove a key from watch list. It will be wise to remove subscriptions to this key before calling this method. |
-| clearWatch       | Will clear watch list. To avoid leaks, it will be wise to keep a record of your subscriptions and pass them to this method to unsubscribe them for you. |
+| Method           | arguments     |Description                                                          |
+|------------------|---------|---------------------------------------------------------------------------|
+| makeSmartLogs    | options | Will override console log with given options. You could set-up options in your environment variables and call this method to set your logs based on deployment stage. Or set-up any one of the option attributes at any-time. But remember that the setting is global per application. |
+| redirectedOutput | -       | Will return event emitter that emits logs if redirectOutput flag of options is set. |
+| markupTrace      | event   | Will mark-up stack trace from list of plain text to a list of click-able links. |
+| addWatch         | key     | Will watch for existance of a particular key in a log.                          |
+| removeWatch      | key     | Will remove a key from watch list. It will be wise to remove subscriptions to this key before calling this method. |
+| clearWatch       | -       | Will clear watch list. To avoid leaks, it will be wise to keep a record of your subscriptions and pass them to this method to unsubscribe them for you. |
 
 
 ### Options
@@ -53,7 +53,22 @@ import { SmartConsoleService } from '@sedeh/smart-console';
         this.myLogView.push(this.smartService.markupTrace(event));
       }
     );
-  }
+	}
+	
+	...
+
+	const sbc = this.smartService
+					.addWatch(key)
+					.subscribe(
+						(event) => {
+						// do something with the event
+						}
+					);
+	this.watchSubscribers.push(sbc);
+	
+	...
+
+	this.smartService.clearWatchList(this.watchSubscribers);
 
 ```
 
@@ -61,6 +76,7 @@ import { SmartConsoleService } from '@sedeh/smart-console';
 
 | Version | Description                                                          |
 |---------|----------------------------------------------------------------------|
+|1.1.1    | Fixed the watch code if a json is logged.                            |
 |1.1.0    | Added watch methods to make it possible for knowing if log is performed containing a particular key. |
 |1.0.4    | break lines on trace for Safari.                                     |
 |1.0.3    | Fixed issues on Safari and IE11 browsers.                            |

@@ -65,6 +65,37 @@
             this.watchList = {};
         }
         /**
+         * @param {?} args
+         * @return {?}
+         */
+        SmartConsoleService.prototype._argsToString = /**
+         * @param {?} args
+         * @return {?}
+         */
+            function (args) {
+                /** @type {?} */
+                var result = [];
+                args.map(function (arg) {
+                    if (typeof arg === 'object') {
+                        try {
+                            result.push(JSON.stringify(arg));
+                        }
+                        catch (e) {
+                            if (arg.message) {
+                                result.push(arg.message);
+                            }
+                            else {
+                                result.push(arg);
+                            }
+                        }
+                    }
+                    else {
+                        result.push(arg);
+                    }
+                });
+                return result.join(',');
+            };
+        /**
          * @param {...?} args
          * @return {?}
          */
@@ -81,10 +112,7 @@
                 var result = false;
                 if (this.options.suppress) {
                     /** @type {?} */
-                    var x_1 = (args instanceof Array) ?
-                        args.join(',') :
-                        (typeof args === 'object') ?
-                            JSON.stringify(args) : "" + args;
+                    var x_1 = this._argsToString(args);
                     this.options.suppress.map(function (item) {
                         if (x_1.indexOf(item) > -1) {
                             result = true;
@@ -151,13 +179,16 @@
                 /** @type {?} */
                 var list = Object.keys(this.watchList);
                 if (list.length) {
-                    /** @type {?} */
-                    var logStr_1 = __spread(args).join(',');
-                    list.map(function (key) {
-                        if (logStr_1.indexOf(key) > -1) {
-                            _this.watchList[key].emit(__spread(args));
-                        }
-                    });
+                    try {
+                        /** @type {?} */
+                        var logStr_1 = this._argsToString(args);
+                        list.map(function (key) {
+                            if (logStr_1.indexOf(key) > -1) {
+                                _this.watchList[key].emit(args);
+                            }
+                        });
+                    }
+                    catch (e) { }
                 }
             };
         /**
@@ -582,8 +613,11 @@
          * @return {?}
          */
             function (args) {
+                /** @type {?} */
+                var result = args;
                 if (args instanceof Array) {
-                    args.map(function (item, index) {
+                    result = [];
+                    args.map(function (item) {
                         if (typeof item === 'string') {
                             /** @type {?} */
                             var breakOn = (item.indexOf('\n') > 0) ? '\n' : ((item.indexOf('\r') > 0) ? '\r' : undefined);
@@ -630,15 +664,34 @@
                                         list_1.push(line);
                                     }
                                 });
-                                args[index] = list_1.join('<br />');
+                                result.push(list_1.join('<br />'));
                             }
                             else if (breakOn) {
-                                args[index] = item.split(breakOn).join('<br />');
+                                result.push(item.split(breakOn).join('<br />'));
                             }
+                            else {
+                                result.push(item);
+                            }
+                        }
+                        else if (typeof item === 'object') {
+                            try {
+                                result.push(JSON.stringify(item));
+                            }
+                            catch (e) {
+                                if (item.message) {
+                                    result.push(item.message);
+                                }
+                                else {
+                                    result.push(item);
+                                }
+                            }
+                        }
+                        else {
+                            result.push(item);
                         }
                     });
                 }
-                return args;
+                return result;
             };
         SmartConsoleService.decorators = [
             { type: core.Injectable }

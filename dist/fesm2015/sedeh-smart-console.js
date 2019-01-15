@@ -18,6 +18,33 @@ class SmartConsoleService {
         this.watchList = {};
     }
     /**
+     * @param {?} args
+     * @return {?}
+     */
+    _argsToString(args) {
+        /** @type {?} */
+        let result = [];
+        args.map((arg) => {
+            if (typeof arg === 'object') {
+                try {
+                    result.push(JSON.stringify(arg));
+                }
+                catch (e) {
+                    if (arg.message) {
+                        result.push(arg.message);
+                    }
+                    else {
+                        result.push(arg);
+                    }
+                }
+            }
+            else {
+                result.push(arg);
+            }
+        });
+        return result.join(',');
+    }
+    /**
      * @param {...?} args
      * @return {?}
      */
@@ -26,10 +53,7 @@ class SmartConsoleService {
         let result = false;
         if (this.options.suppress) {
             /** @type {?} */
-            const x = (args instanceof Array) ?
-                args.join(',') :
-                (typeof args === 'object') ?
-                    JSON.stringify(args) : "" + args;
+            const x = this._argsToString(args);
             this.options.suppress.map((item) => {
                 if (x.indexOf(item) > -1) {
                     result = true;
@@ -80,13 +104,16 @@ class SmartConsoleService {
         /** @type {?} */
         const list = Object.keys(this.watchList);
         if (list.length) {
-            /** @type {?} */
-            const logStr = [...args].join(',');
-            list.map((key) => {
-                if (logStr.indexOf(key) > -1) {
-                    this.watchList[key].emit([...args]);
-                }
-            });
+            try {
+                /** @type {?} */
+                const logStr = this._argsToString(args);
+                list.map((key) => {
+                    if (logStr.indexOf(key) > -1) {
+                        this.watchList[key].emit(args);
+                    }
+                });
+            }
+            catch (e) { }
         }
     }
     /**
@@ -398,8 +425,11 @@ class SmartConsoleService {
      * @return {?}
      */
     markupTrace(args) {
+        /** @type {?} */
+        let result = args;
         if (args instanceof Array) {
-            args.map((item, index) => {
+            result = [];
+            args.map((item) => {
                 if (typeof item === 'string') {
                     /** @type {?} */
                     const breakOn = (item.indexOf('\n') > 0) ? '\n' : ((item.indexOf('\r') > 0) ? '\r' : undefined);
@@ -446,15 +476,34 @@ class SmartConsoleService {
                                 list.push(line);
                             }
                         });
-                        args[index] = list.join('<br />');
+                        result.push(list.join('<br />'));
                     }
                     else if (breakOn) {
-                        args[index] = item.split(breakOn).join('<br />');
+                        result.push(item.split(breakOn).join('<br />'));
                     }
+                    else {
+                        result.push(item);
+                    }
+                }
+                else if (typeof item === 'object') {
+                    try {
+                        result.push(JSON.stringify(item));
+                    }
+                    catch (e) {
+                        if (item.message) {
+                            result.push(item.message);
+                        }
+                        else {
+                            result.push(item);
+                        }
+                    }
+                }
+                else {
+                    result.push(item);
                 }
             });
         }
-        return args;
+        return result;
     }
 }
 SmartConsoleService.decorators = [

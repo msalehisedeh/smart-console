@@ -30,6 +30,7 @@ export class SmartConsoleService {
 	private defaultTrace = console.trace;
 	private defaultAssert = console.assert;
 	private output = new EventEmitter();
+	private watchList = {};
 
 	private _suppressed(...args) {
 		let result = false;
@@ -77,6 +78,20 @@ export class SmartConsoleService {
 		}
 		return result;
 	}
+	private _reportWatch(args) {
+		const list = Object.keys(this.watchList);
+		if (list.length) {
+			const logStr = [...args].join(',');
+			list.map(
+				(key) => {
+					if (logStr.indexOf(key) > -1) {
+						this.watchList[key].emit([...args]);
+					};
+				}
+			);
+		}
+	}
+
 	private _upscale(...args) {
 		const stack = this._getStack();
 		const re = /([^(]+)@|at ([^(]+) \(/g;
@@ -101,6 +116,7 @@ export class SmartConsoleService {
 			!this._blocked(args)) {
 			const newArgs = this.options.upscale ?
 							this._upscale(args) : args;
+			
 			if (this.options.upgrade) {
 				if (this.options.emitOutput) {
 					this.output.emit(["log", ...newArgs]);
@@ -121,6 +137,7 @@ export class SmartConsoleService {
 				}
 			}
 		}
+		this._reportWatch(args);
 	}
 	private _log(...args) {
 		if ((this.options.logDisabled === undefined || !this.options.logDisabled) &&
@@ -157,6 +174,7 @@ export class SmartConsoleService {
 				}
 			}
 		}
+		this._reportWatch(args);
 	}
 	private _warn(...args) {
 		if ((this.options.warnDisabled === undefined || !this.options.warnDisabled) &&
@@ -193,6 +211,7 @@ export class SmartConsoleService {
 				}
 			}
 		}
+		this._reportWatch(args);
 	}
 	private _error(...args) {
 		if ((this.options.errorDisabled === undefined || !this.options.errorDisabled) &&
@@ -220,6 +239,7 @@ export class SmartConsoleService {
 				}
 			}
 		}
+		this._reportWatch(args);
 	}
 	private _table(...args) {
 		if ((this.options.tableDisabled === undefined || !this.options.errorDisabled) &&
@@ -236,6 +256,7 @@ export class SmartConsoleService {
 				this.defaultTable(...newArgs);		
 			}
 		}
+		this._reportWatch(args);
 	}
 	private _trace(...args) {
 		if ((this.options.traceDisabled === undefined || !this.options.traceDisabled)) {
@@ -250,6 +271,7 @@ export class SmartConsoleService {
 				this.defaultTrace(...newArgs);		
 			}
 		}
+		this._reportWatch(args);
 	}
 	private _assert(...args) {
 		if ((this.options.assertDisabled === undefined || !this.options.assertDisabled)) {
@@ -262,6 +284,7 @@ export class SmartConsoleService {
 				this.defaultAssert(...args);		
 			}
 		}
+		this._reportWatch(args);
 	}
 	/*
 	* Will initialize smart logger.
@@ -282,6 +305,32 @@ export class SmartConsoleService {
 	*/
 	redirectedOutput() {
 		return this.output;
+	}
+	/*
+	* Will add a key to the warch list.
+	* @args key to be added.
+	*/
+	addWatch(key) {
+		if (!this.watchList[key]) {
+			this.watchList[key] = new EventEmitter();
+		}
+		return this.watchList[key];
+	}
+	/*
+	* Will remove a key from the warch list.
+	* @args key to be removed. it will be wise to remove subscriptions to this key before calling this method.
+	*/
+	removeWatch(key) {
+		delete this.watchList[key];
+	}
+	/*
+	* Will clear warch list.
+	* @args list is a list of subscribers to the items in watchlist. 
+	* It could be empty, but to avoid leaks, it will be wise to keep a record of your subscriptions.
+	*/
+	clearWatchList(list: any[]) {
+		list.map((sbc) => sbc.unsubscribe());
+		this.watchList = {};
 	}
 	/*
 	* Will markup stack trace to provide HTML fragment with anchors foe every trace.

@@ -13,6 +13,7 @@ export class AppComponent {
 
   data = [];
 
+  subscribers = [];
   options = {
     output: true,
     logAfterEmit: false,
@@ -27,7 +28,8 @@ export class AppComponent {
     upgrade: false,
     upscale: true,  
     blockCaller: 'core.js,Zone.ts,MyComponent.ts',
-    suppress: 'test3,test4'
+    suppress: 'test3,test4',
+    watch: 'sanitizing'
   };
 
   constructor(
@@ -103,6 +105,24 @@ export class AppComponent {
       newOptions['suppress'] = this.options.suppress.split(',');
     }
     this.smartService.makeSmartLogs(newOptions);
+    if (this.options.watch) {
+      const list = this.options.watch.split(',');
+      this.smartService.clearWatchList(this.subscribers);
+      this.subscribers = [];
+      list.map(
+        (key) => {
+          const sbc = this.smartService.addWatch(key).subscribe(
+            (event) => {
+              this.data.push("Watch for '" + key + "' is reporting log:" + event.toString());
+            }
+          );
+          this.subscribers.push(sbc);
+        }
+      );
+    } else {
+      this.smartService.clearWatchList(this.subscribers);
+      this.subscribers = [];
+    }
 
     console.log("test","1","2");
     console.info("test","1","2");

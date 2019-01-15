@@ -17,7 +17,7 @@
          type="checkbox" 
          [checked]="options.output" 
          (click)="update('output', $event)" />
-      Output Logs in log display insted of browser console.
+      Output Logs in log display of this page instead of browser console.
     </label>
   </span>
   <span>
@@ -26,7 +26,7 @@
          type="checkbox" 
          [checked]="options.logAfterEmit" 
          (click)="update('logAfterEmit', $event)" />
-      After sendig log to display, log it to console as well.
+      After sendig log to display them on this page, log it to console as well.
     </label>
   </span>
   <span>
@@ -35,7 +35,7 @@
          type="checkbox" 
          [checked]="options.upscale" 
          (click)="update('upscale', $event)" />
-      Show additional info on each log
+      Show additional info (time, caller, calling method) on each log
     </label>
   </span>
   <span>
@@ -107,7 +107,7 @@
          type="checkbox" 
          [checked]="options.downGrade" 
          (click)="update('downGrade', $event)" />
-      Downgrade a log from warning to info or log to warning, or error to log
+      Downgrade logs from warning to info, or from log to warning, or from error to log
     </label>
   </span>
   <span>
@@ -116,9 +116,10 @@
          type="checkbox" 
          [checked]="options.upgrade" 
          (click)="update('upgrade', $event)" />
-      Upgrades a log from info to warning or warning to log, or log to error
+      Upgrades a log from info to warning, or from warning to log, or from  log to error
     </label>
   </span>
+  <span><hr/></span>
   <span>
     <label for="blockCaller">
       Block Logs based on Caller (comma separated): 
@@ -131,6 +132,13 @@
       Suppress Logs based on keywords (comma separated): 
       <input id="suppress" [value]="options.suppress"  
         (keyup)="keyup('suppress', $event)"/>
+    </label>
+  </span>
+  <span>
+    <label for="watch">
+      Notify me when any one of the following keywords are in a log (comma separated): 
+      <input id="watch" [value]="options.watch"  
+        (keyup)="keyup('watch', $event)"/>
     </label>
   </span>
 </fieldset>
@@ -155,7 +163,5 @@
     <button (click)="clear()">Clear</button>
 </div>
 <div class="note" *ngIf="data.length">
-  <ul>
-    <li *ngFor="let item of data" [innerHTML]="item "></li>
-  </ul>
+  <ul><li *ngFor="let item of data" [innerHTML]="item "></li></ul>
 </div>

@@ -15,6 +15,7 @@ class SmartConsoleService {
         this.defaultTrace = console.trace;
         this.defaultAssert = console.assert;
         this.output = new EventEmitter();
+        this.watchList = {};
     }
     /**
      * @param {...?} args
@@ -70,6 +71,23 @@ class SmartConsoleService {
             });
         }
         return result;
+    }
+    /**
+     * @param {?} args
+     * @return {?}
+     */
+    _reportWatch(args) {
+        /** @type {?} */
+        const list = Object.keys(this.watchList);
+        if (list.length) {
+            /** @type {?} */
+            const logStr = [...args].join(',');
+            list.map((key) => {
+                if (logStr.indexOf(key) > -1) {
+                    this.watchList[key].emit([...args]);
+                }
+            });
+        }
     }
     /**
      * @param {...?} args
@@ -136,6 +154,7 @@ class SmartConsoleService {
                 }
             }
         }
+        this._reportWatch(args);
     }
     /**
      * @param {...?} args
@@ -182,6 +201,7 @@ class SmartConsoleService {
                 }
             }
         }
+        this._reportWatch(args);
     }
     /**
      * @param {...?} args
@@ -228,6 +248,7 @@ class SmartConsoleService {
                 }
             }
         }
+        this._reportWatch(args);
     }
     /**
      * @param {...?} args
@@ -263,6 +284,7 @@ class SmartConsoleService {
                 }
             }
         }
+        this._reportWatch(args);
     }
     /**
      * @param {...?} args
@@ -285,6 +307,7 @@ class SmartConsoleService {
                 this.defaultTable(...newArgs);
             }
         }
+        this._reportWatch(args);
     }
     /**
      * @param {...?} args
@@ -305,6 +328,7 @@ class SmartConsoleService {
                 this.defaultTrace(...newArgs);
             }
         }
+        this._reportWatch(args);
     }
     /**
      * @param {...?} args
@@ -322,6 +346,7 @@ class SmartConsoleService {
                 this.defaultAssert(...args);
             }
         }
+        this._reportWatch(args);
     }
     /**
      * @param {?} instructions
@@ -342,6 +367,31 @@ class SmartConsoleService {
      */
     redirectedOutput() {
         return this.output;
+    }
+    /**
+     * @param {?} key
+     * @return {?}
+     */
+    addWatch(key) {
+        if (!this.watchList[key]) {
+            this.watchList[key] = new EventEmitter();
+        }
+        return this.watchList[key];
+    }
+    /**
+     * @param {?} key
+     * @return {?}
+     */
+    removeWatch(key) {
+        delete this.watchList[key];
+    }
+    /**
+     * @param {?} list
+     * @return {?}
+     */
+    clearWatchList(list) {
+        list.map((sbc) => sbc.unsubscribe());
+        this.watchList = {};
     }
     /**
      * @param {?} args

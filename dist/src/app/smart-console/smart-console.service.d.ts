@@ -25,9 +25,11 @@ export declare class SmartConsoleService {
     private defaultTrace;
     private defaultAssert;
     private output;
+    private watchList;
     private _suppressed(...args);
     private _getStack();
     private _blocked(...args);
+    private _reportWatch(args);
     private _upscale(...args);
     private _info(...args);
     private _log(...args);
@@ -38,5 +40,8 @@ export declare class SmartConsoleService {
     private _assert(...args);
     makeSmartLogs(instructions: SmartOptions): void;
     redirectedOutput(): EventEmitter<{}>;
+    addWatch(key: any): any;
+    removeWatch(key: any): void;
+    clearWatchList(list: any[]): void;
     markupTrace(args: any): any;
 }

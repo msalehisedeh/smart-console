@@ -16,6 +16,7 @@ var SmartConsoleService = /** @class */ (function () {
         this.defaultTrace = console.trace;
         this.defaultAssert = console.assert;
         this.output = new EventEmitter();
+        this.watchList = {};
     }
     /**
      * @param {...?} args
@@ -90,6 +91,28 @@ var SmartConsoleService = /** @class */ (function () {
             });
         }
         return result;
+    };
+    /**
+     * @param {?} args
+     * @return {?}
+     */
+    SmartConsoleService.prototype._reportWatch = /**
+     * @param {?} args
+     * @return {?}
+     */
+    function (args) {
+        var _this = this;
+        /** @type {?} */
+        var list = Object.keys(this.watchList);
+        if (list.length) {
+            /** @type {?} */
+            var logStr_1 = __spread(args).join(',');
+            list.map(function (key) {
+                if (logStr_1.indexOf(key) > -1) {
+                    _this.watchList[key].emit(__spread(args));
+                }
+            });
+        }
     };
     /**
      * @param {...?} args
@@ -173,6 +196,7 @@ var SmartConsoleService = /** @class */ (function () {
                 }
             }
         }
+        this._reportWatch(args);
     };
     /**
      * @param {...?} args
@@ -227,6 +251,7 @@ var SmartConsoleService = /** @class */ (function () {
                 }
             }
         }
+        this._reportWatch(args);
     };
     /**
      * @param {...?} args
@@ -281,6 +306,7 @@ var SmartConsoleService = /** @class */ (function () {
                 }
             }
         }
+        this._reportWatch(args);
     };
     /**
      * @param {...?} args
@@ -324,6 +350,7 @@ var SmartConsoleService = /** @class */ (function () {
                 }
             }
         }
+        this._reportWatch(args);
     };
     /**
      * @param {...?} args
@@ -354,6 +381,7 @@ var SmartConsoleService = /** @class */ (function () {
                 this.defaultTable.apply(this, __spread(newArgs));
             }
         }
+        this._reportWatch(args);
     };
     /**
      * @param {...?} args
@@ -382,6 +410,7 @@ var SmartConsoleService = /** @class */ (function () {
                 this.defaultTrace.apply(this, __spread(newArgs));
             }
         }
+        this._reportWatch(args);
     };
     /**
      * @param {...?} args
@@ -407,6 +436,7 @@ var SmartConsoleService = /** @class */ (function () {
                 this.defaultAssert.apply(this, __spread(args));
             }
         }
+        this._reportWatch(args);
     };
     /*
     * Will initialize smart logger.
@@ -441,6 +471,56 @@ var SmartConsoleService = /** @class */ (function () {
      */
     function () {
         return this.output;
+    };
+    /*
+    * Will add a key to the warch list.
+    * @args key to be added.
+    */
+    /**
+     * @param {?} key
+     * @return {?}
+     */
+    SmartConsoleService.prototype.addWatch = /**
+     * @param {?} key
+     * @return {?}
+     */
+    function (key) {
+        if (!this.watchList[key]) {
+            this.watchList[key] = new EventEmitter();
+        }
+        return this.watchList[key];
+    };
+    /*
+    * Will remove a key from the warch list.
+    * @args key to be removed. it will be wise to remove subscriptions to this key before calling this method.
+    */
+    /**
+     * @param {?} key
+     * @return {?}
+     */
+    SmartConsoleService.prototype.removeWatch = /**
+     * @param {?} key
+     * @return {?}
+     */
+    function (key) {
+        delete this.watchList[key];
+    };
+    /*
+    * Will clear warch list.
+    * @args list is a list of subscribers to the items in watchlist.
+    * It could be empty, but to avoid leaks, it will be wise to keep a record of your subscriptions.
+    */
+    /**
+     * @param {?} list
+     * @return {?}
+     */
+    SmartConsoleService.prototype.clearWatchList = /**
+     * @param {?} list
+     * @return {?}
+     */
+    function (list) {
+        list.map(function (sbc) { return sbc.unsubscribe(); });
+        this.watchList = {};
     };
     /*
     * Will markup stack trace to provide HTML fragment with anchors foe every trace.

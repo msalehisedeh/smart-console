@@ -11,6 +11,8 @@ export interface SmartOptions {
 	errorDisabled?: boolean, // disables all error level console logs
 	tableDisabled?: boolean, // disables all table console logs
 	traceDisabled?: boolean, // disables all trace level console logs
+	exceptionDisabled?: boolean, // disables all exception level console logs
+	debugDisabled?: boolean, // disables all debug level console logs
 	assertDisabled?:boolean, // disables assert logs on console
 	downGrade?: boolean,     // downgrade a log from warning to info or log to warning, or error to log.
 	upgrade?: boolean,       // upgrades a log from info to warning or warning to log, or log to error
@@ -29,6 +31,8 @@ export class SmartConsoleService {
 	private defaultTable = console.table;
 	private defaultTrace = console.trace;
 	private defaultAssert = console.assert;
+	private defaultException = console.exception;
+	private defaultDebug = console.debug;
 	private output = new EventEmitter();
 	private watchList = {};
 
@@ -293,6 +297,32 @@ export class SmartConsoleService {
 		}
 		this._reportWatch(args);
 	}
+	private _exception(...args) {
+		if ((this.options.exceptionDisabled === undefined || !this.options.exceptionDisabled)) {
+			if (this.options.emitOutput) {
+				this.output.emit(["exception", ...args]);
+				if (this.options.logAfterEmit) {
+					this.defaultException(...args);
+				}
+			} else {
+				this.defaultException(...args);		
+			}
+		}
+		this._reportWatch(args);
+	}
+	private _debug(...args) {
+		if ((this.options.debugDisabled === undefined || !this.options.debugDisabled)) {
+			if (this.options.emitOutput) {
+				this.output.emit(["debug", ...args]);
+				if (this.options.logAfterEmit) {
+					this.defaultDebug(...args);
+				}
+			} else {
+				this.defaultDebug(...args);		
+			}
+		}
+		this._reportWatch(args);
+	}
 	private _assert(...args) {
 		if ((this.options.assertDisabled === undefined || !this.options.assertDisabled)) {
 			if (this.options.emitOutput) {
@@ -312,13 +342,33 @@ export class SmartConsoleService {
 	*/
 	makeSmartLogs( instructions: SmartOptions ) {
 		this.options = instructions;
-		console.log = this._log.bind(this);
-		console.info = this._info.bind(this);
-		console.warn = this._warn.bind(this);
-		console.error = this._error.bind(this);
-		console.table = this._table.bind(this);
-		console.trace = this._trace.bind(this);
-		console.assert = this._assert.bind(this);
+		if (console.log) {
+			console.log = this._log.bind(this);
+		}
+		if (console.info) {
+			console.info = this._info.bind(this);
+		}
+		if (console.warn) {
+			console.warn = this._warn.bind(this);
+		}
+		if (console.error) {
+			console.error = this._error.bind(this);
+		}
+		if (console.table) {
+			console.table = this._table.bind(this);
+		}
+		if (console.trace) {
+			console.trace = this._trace.bind(this);
+		}
+		if (console.debug) {
+			console.debug = this._debug.bind(this);
+		}
+		if (console.assert) {
+			console.assert = this._assert.bind(this);
+		}
+		if (console.exception) {
+			console.exception = this._exception.bind(this);
+		}
 	}
 	/*
 	* @return Event Emitter that may publisg logs.

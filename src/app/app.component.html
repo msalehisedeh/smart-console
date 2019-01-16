@@ -93,6 +93,24 @@
     </label>
   </span>
   <span>
+    <label for="debugDisabled">
+      <input id="debugDisabled"
+         type="checkbox" 
+         [checked]="options.debugDisabled" 
+         (click)="update('debugDisabled', $event)" />
+      Disables debug logs on console
+    </label>
+  </span>
+  <span>
+    <label for="exceptionDisabled">
+      <input id="exceptionDisabled"
+         type="checkbox" 
+         [checked]="options.exceptionDisabled" 
+         (click)="update('exceptionDisabled', $event)" />
+      Disables exception logs on console
+    </label>
+  </span>
+  <span>
     <label for="tableDisabled">
       <input id="tableDisabled"
          type="checkbox" 
@@ -152,6 +170,8 @@
       <li>console.warning('test3',1,2)</li>
       <li>console.error('test',1,2)</li>
       <li>console.error('test4',1,2)</li>
+      <li>console.exception('exceptional',43343,"not!")</li>
+      <li>console.debug('debug this bug',"1,2")</li>
       <li>console.table(['test',1,2])</li>
       <li>console.trace(new Error())</li>
       <li>console.assert(false, "asserting test!")</li>

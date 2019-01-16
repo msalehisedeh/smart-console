@@ -14,6 +14,8 @@ class SmartConsoleService {
         this.defaultTable = console.table;
         this.defaultTrace = console.trace;
         this.defaultAssert = console.assert;
+        this.defaultException = console.exception;
+        this.defaultDebug = console.debug;
         this.output = new EventEmitter();
         this.watchList = {};
     }
@@ -361,6 +363,42 @@ class SmartConsoleService {
      * @param {...?} args
      * @return {?}
      */
+    _exception(...args) {
+        if ((this.options.exceptionDisabled === undefined || !this.options.exceptionDisabled)) {
+            if (this.options.emitOutput) {
+                this.output.emit(["exception", ...args]);
+                if (this.options.logAfterEmit) {
+                    this.defaultException(...args);
+                }
+            }
+            else {
+                this.defaultException(...args);
+            }
+        }
+        this._reportWatch(args);
+    }
+    /**
+     * @param {...?} args
+     * @return {?}
+     */
+    _debug(...args) {
+        if ((this.options.debugDisabled === undefined || !this.options.debugDisabled)) {
+            if (this.options.emitOutput) {
+                this.output.emit(["debug", ...args]);
+                if (this.options.logAfterEmit) {
+                    this.defaultDebug(...args);
+                }
+            }
+            else {
+                this.defaultDebug(...args);
+            }
+        }
+        this._reportWatch(args);
+    }
+    /**
+     * @param {...?} args
+     * @return {?}
+     */
     _assert(...args) {
         if ((this.options.assertDisabled === undefined || !this.options.assertDisabled)) {
             if (this.options.emitOutput) {
@@ -381,13 +419,33 @@ class SmartConsoleService {
      */
     makeSmartLogs(instructions) {
         this.options = instructions;
-        console.log = this._log.bind(this);
-        console.info = this._info.bind(this);
-        console.warn = this._warn.bind(this);
-        console.error = this._error.bind(this);
-        console.table = this._table.bind(this);
-        console.trace = this._trace.bind(this);
-        console.assert = this._assert.bind(this);
+        if (console.log) {
+            console.log = this._log.bind(this);
+        }
+        if (console.info) {
+            console.info = this._info.bind(this);
+        }
+        if (console.warn) {
+            console.warn = this._warn.bind(this);
+        }
+        if (console.error) {
+            console.error = this._error.bind(this);
+        }
+        if (console.table) {
+            console.table = this._table.bind(this);
+        }
+        if (console.trace) {
+            console.trace = this._trace.bind(this);
+        }
+        if (console.debug) {
+            console.debug = this._debug.bind(this);
+        }
+        if (console.assert) {
+            console.assert = this._assert.bind(this);
+        }
+        if (console.exception) {
+            console.exception = this._exception.bind(this);
+        }
     }
     /**
      * @return {?}

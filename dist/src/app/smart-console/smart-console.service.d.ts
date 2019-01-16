@@ -8,6 +8,8 @@ export interface SmartOptions {
     errorDisabled?: boolean;
     tableDisabled?: boolean;
     traceDisabled?: boolean;
+    exceptionDisabled?: boolean;
+    debugDisabled?: boolean;
     assertDisabled?: boolean;
     downGrade?: boolean;
     upgrade?: boolean;
@@ -24,6 +26,8 @@ export declare class SmartConsoleService {
     private defaultTable;
     private defaultTrace;
     private defaultAssert;
+    private defaultException;
+    private defaultDebug;
     private output;
     private watchList;
     private _argsToString(args);
@@ -38,6 +42,8 @@ export declare class SmartConsoleService {
     private _error(...args);
     private _table(...args);
     private _trace(...args);
+    private _exception(...args);
+    private _debug(...args);
     private _assert(...args);
     makeSmartLogs(instructions: SmartOptions): void;
     redirectedOutput(): EventEmitter<{}>;

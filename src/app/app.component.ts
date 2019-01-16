@@ -22,6 +22,8 @@ export class AppComponent {
     warnDisabled: false,
     errorDisabled: false,
     traceDisabled: false,
+    exceptionDisabled: false,
+    debugDisabled: false,
     assertDisabled: false,
     tableDisabled: false,
     downGrade: false,
@@ -57,6 +59,7 @@ export class AppComponent {
 
   clear() {
     this.data = [];
+    console.clear();
   }
 
   execute() {
@@ -82,6 +85,12 @@ export class AppComponent {
     }
     if (this.options.assertDisabled){
       newOptions['assertDisabled'] = true;
+    }
+    if (this.options.debugDisabled){
+      newOptions['debugDisabled'] = true;
+    }
+    if (this.options.exceptionDisabled){
+      newOptions['exceptionDisabled'] = true;
     }
     if (this.options.downGrade) {
       newOptions['downGrade'] = true;
@@ -134,6 +143,8 @@ export class AppComponent {
     console.warn("test3","1","2");
     console.error("test","1","2");
     console.error("test4","1","2");
+    console.exception('exceptional',43343,"not!");
+    console.debug('debug this bug',"1,2");
     console.table(["test","1","2"]);
 
     this._trace();

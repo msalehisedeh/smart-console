@@ -15,6 +15,8 @@ var SmartConsoleService = /** @class */ (function () {
         this.defaultTable = console.table;
         this.defaultTrace = console.trace;
         this.defaultAssert = console.assert;
+        this.defaultException = console.exception;
+        this.defaultDebug = console.debug;
         this.output = new EventEmitter();
         this.watchList = {};
     }
@@ -447,6 +449,58 @@ var SmartConsoleService = /** @class */ (function () {
      * @param {...?} args
      * @return {?}
      */
+    SmartConsoleService.prototype._exception = /**
+     * @param {...?} args
+     * @return {?}
+     */
+    function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        if ((this.options.exceptionDisabled === undefined || !this.options.exceptionDisabled)) {
+            if (this.options.emitOutput) {
+                this.output.emit(__spread(["exception"], args));
+                if (this.options.logAfterEmit) {
+                    this.defaultException.apply(this, __spread(args));
+                }
+            }
+            else {
+                this.defaultException.apply(this, __spread(args));
+            }
+        }
+        this._reportWatch(args);
+    };
+    /**
+     * @param {...?} args
+     * @return {?}
+     */
+    SmartConsoleService.prototype._debug = /**
+     * @param {...?} args
+     * @return {?}
+     */
+    function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        if ((this.options.debugDisabled === undefined || !this.options.debugDisabled)) {
+            if (this.options.emitOutput) {
+                this.output.emit(__spread(["debug"], args));
+                if (this.options.logAfterEmit) {
+                    this.defaultDebug.apply(this, __spread(args));
+                }
+            }
+            else {
+                this.defaultDebug.apply(this, __spread(args));
+            }
+        }
+        this._reportWatch(args);
+    };
+    /**
+     * @param {...?} args
+     * @return {?}
+     */
     SmartConsoleService.prototype._assert = /**
      * @param {...?} args
      * @return {?}
@@ -483,13 +537,33 @@ var SmartConsoleService = /** @class */ (function () {
      */
     function (instructions) {
         this.options = instructions;
-        console.log = this._log.bind(this);
-        console.info = this._info.bind(this);
-        console.warn = this._warn.bind(this);
-        console.error = this._error.bind(this);
-        console.table = this._table.bind(this);
-        console.trace = this._trace.bind(this);
-        console.assert = this._assert.bind(this);
+        if (console.log) {
+            console.log = this._log.bind(this);
+        }
+        if (console.info) {
+            console.info = this._info.bind(this);
+        }
+        if (console.warn) {
+            console.warn = this._warn.bind(this);
+        }
+        if (console.error) {
+            console.error = this._error.bind(this);
+        }
+        if (console.table) {
+            console.table = this._table.bind(this);
+        }
+        if (console.trace) {
+            console.trace = this._trace.bind(this);
+        }
+        if (console.debug) {
+            console.debug = this._debug.bind(this);
+        }
+        if (console.assert) {
+            console.assert = this._assert.bind(this);
+        }
+        if (console.exception) {
+            console.exception = this._exception.bind(this);
+        }
     };
     /*
     * @return Event Emitter that may publisg logs.

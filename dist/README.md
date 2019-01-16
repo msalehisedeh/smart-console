@@ -1,9 +1,9 @@
 # Welcome to Smart Console!
 
-Have you ever been in need of suppressing console logs? Have you thought of a tool that can help you suppress logs based on type, caller, level, or anything else that I cannot think of? And what if you just want to watch for occurance of a log?
+Have you ever been in need of suppressing console logs? Have you thought of a tool that can help you suppress logs based on type, caller, level, or anything else that I cannot think of? And what if you just want to watch for occurrence of a log?
 You can use this tool to have your application do all of that and maybe a bit more! 
 
-**NOTE** http related 403, 500, ... logs are issued natively by zon.js as a result this tool has no control over them.
+**NOTE: ** http related 403, 500, ... logs are issued natively by zon.js as a result this tool has no control over them.
 
 **I appreciate comments and ideas to make this tool versatile.**
 
@@ -17,7 +17,7 @@ Inject the SmartConsoleService and give it the criteria you have for your applic
 | makeSmartLogs    | options | Will override console log with given options. You could set-up options in your environment variables and call this method to set your logs based on deployment stage. Or set-up any one of the option attributes at any-time. But remember that the setting is global per application. |
 | redirectedOutput | -       | Will return event emitter that emits logs if redirectOutput flag of options is set. |
 | markupTrace      | event   | Will mark-up stack trace from list of plain text to a list of click-able links. |
-| addWatch         | key     | Will watch for existance of a particular key in a log.                          |
+| addWatch         | key     | Will watch for existence of a particular key in a log.                          |
 | removeWatch      | key     | Will remove a key from watch list. It will be wise to remove subscriptions to this key before calling this method. |
 | clearWatch       | -       | Will clear watch list. To avoid leaks, it will be wise to keep a record of your subscriptions and pass them to this method to unsubscribe them for you. |
 
@@ -25,7 +25,7 @@ Inject the SmartConsoleService and give it the criteria you have for your applic
 ### Options
 ```javascript
 SmartOptions {
-	emitOutput?: boolean,// log result in to output instead of console.
+	emitOutput?: boolean,   // log result in to output instead of console.
 	logAfterEmit?: boolean, // continue logging into browser console after emitting the log
 	logDisabled?: boolean,  // disables all log level console logs
 	infoDisabled?: boolean, // disables all info level console logs
@@ -33,6 +33,8 @@ SmartOptions {
 	errorDisabled?: boolean,// disables all error level console logs
 	tableDisabled?: boolean,// disables all table console logs
 	traceDisabled?: boolean,// disables all trace level console logs
+	exceptionDisabled?: boolean, // disables all exception level console logs
+	debugDisabled?: boolean,// disables all debug level console logs
 	assertDisabled?:boolean,// disables assert logs on console
 	downGrade?: boolean,    // downgrade a log from warning to info or log to warning, or error to log.
 	upgrade?: boolean,      // upgrades a log from info to warning or warning to log, or log to error
@@ -76,6 +78,7 @@ import { SmartConsoleService } from '@sedeh/smart-console';
 
 | Version | Description                                                          |
 |---------|----------------------------------------------------------------------|
+|1.1.2    | Added debug and exception methods.                                   |
 |1.1.1    | Fixed the watch code if a json is logged.                            |
 |1.1.0    | Added watch methods to make it possible for knowing if log is performed containing a particular key. |
 |1.0.4    | break lines on trace for Safari.                                     |

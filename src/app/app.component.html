@@ -139,6 +139,19 @@
   </span>
   <span><hr/></span>
   <span>
+    <label for="throttleOn">
+      Throttle logs on: 
+      <select id="throttleOn" (change)="onChange($event)">
+        <option value='0'>NONE</option>
+        <option value='1'>level_1</option>
+        <option value='2'>level_2</option>
+        <option value='3'>level_3</option>
+        <option value='4'>level_4</option>
+        <option value='5'>level_5</option>
+      </select>
+    </label>
+  </span>
+  <span>
     <label for="blockCaller">
       Block Logs based on Caller (comma separated): 
       <input id="blockCaller" [value]="options.blockCaller" 
@@ -175,6 +188,11 @@
       <li>console.table(['test',1,2])</li>
       <li>console.trace(new Error())</li>
       <li>console.assert(false, "asserting test!")</li>
+      <li>console.log('level_3', 'message that may not be as imortant', 'additional info');</li>
+      <li>console.log('level_6', 'message that may be imortant', 'additional info');</li>
+      <li>console.info('level_6', 'message that may be imortant', 'additional info');</li>
+      <li>console.trace('level_5', 'message that may or may not be as imortant', 'additional info');</li>
+      <li>console.warn('level_5', 'message that may or may not be as imortant', 'additional info');</li>
       <li>make http call to invalid address that would cause exception. this will raise native log which cannot be overtaken.</li>
     </ul>
 </fieldset>

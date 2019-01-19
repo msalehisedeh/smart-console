@@ -17,6 +17,7 @@ export interface SmartOptions {
 	downGrade?: boolean,     // downgrade a log from warning to info or log to warning, or error to log.
 	upgrade?: boolean,       // upgrades a log from info to warning or warning to log, or log to error
 	upscale?: boolean,       // shows additional info on each log
+	throttleOn?: number,     // block logs less than provided message level (e.g., level_3 or level_5) in a log
 	blockCaller?: any[],     // blocks the caller
 	suppress?: any[]         // blocks per a keyword
 }
@@ -100,6 +101,35 @@ export class SmartConsoleService {
 		}
 		return result;
 	}
+	private _throttle(...args) {
+		let result = false;
+		if (this.options.throttleOn && (args instanceof Array)) {
+			args.map(
+				(arg) => {
+					if (arg instanceof Array) {
+						arg.map(
+							(item) => {
+								const l = (typeof item === 'string') ? item.indexOf('level_') : -1;
+								if ( l === 0) {
+									if (parseInt(item.substring(6), 10) <= this.options.throttleOn) {
+										result = true;
+									}
+								}
+							}
+						)
+					} else {
+						const l = arg.indexOf('level_');
+						if ( l === 0) {
+							if (parseInt(arg.substring(6), 10) <= this.options.throttleOn) {
+								result = true;
+							}
+						}
+					}
+				}
+			);
+		}
+		return result;
+	}
 	private _reportWatch(args) {
 		const list = Object.keys(this.watchList);
 		if (list.length) {
@@ -136,14 +166,13 @@ export class SmartConsoleService {
 	}
 	private _info(...args) {
 		if ((this.options.infoDisabled === undefined || !this.options.infoDisabled) &&
-			!this._suppressed(args) &&
-			!this._blocked(args)) {
+			!this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
 			const newArgs = this.options.upscale ?
 							this._upscale(args) : args;
 			
 			if (this.options.upgrade) {
 				if (this.options.emitOutput) {
-					this.output.emit(["log", ...newArgs]);
+					this.output.emit(["[log]", ...newArgs]);
 					if (this.options.logAfterEmit) {
 						this.defaultLog(...newArgs);
 					}
@@ -152,7 +181,7 @@ export class SmartConsoleService {
 				}
 			} else {
 				if (this.options.emitOutput) {
-					this.output.emit(["info", ...newArgs]);
+					this.output.emit(["[info]", ...newArgs]);
 					if (this.options.logAfterEmit) {
 						this.defaultLog(...newArgs);
 					}
@@ -165,13 +194,12 @@ export class SmartConsoleService {
 	}
 	private _log(...args) {
 		if ((this.options.logDisabled === undefined || !this.options.logDisabled) &&
-			!this._suppressed(args) &&
-			!this._blocked(args)) {
+			!this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
 			const newArgs = this.options.upscale ?
 							this._upscale(args) : args;
 			if (this.options.downGrade) {
 				if (this.options.emitOutput) {
-					this.output.emit(["info", ...newArgs]);
+					this.output.emit(["[info]", ...newArgs]);
 					if (this.options.logAfterEmit) {
 						this.defaultLog(...newArgs);
 					}
@@ -180,7 +208,7 @@ export class SmartConsoleService {
 				}
 			} else if (this.options.upgrade) {
 				if (this.options.emitOutput) {
-					this.output.emit(["warn", ...newArgs]);
+					this.output.emit(["[warn]", ...newArgs]);
 					if (this.options.logAfterEmit) {
 						this.defaultWarn(...newArgs);
 					}
@@ -189,7 +217,7 @@ export class SmartConsoleService {
 				}
 			} else {
 				if (this.options.emitOutput) {
-					this.output.emit(["log", ...newArgs]);
+					this.output.emit(["[log]", ...newArgs]);
 					if (this.options.logAfterEmit) {
 						this.defaultLog(...newArgs);
 					}
@@ -202,13 +230,12 @@ export class SmartConsoleService {
 	}
 	private _warn(...args) {
 		if ((this.options.warnDisabled === undefined || !this.options.warnDisabled) &&
-			!this._suppressed(args) &&
-			!this._blocked(args)) {
+			!this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
 			const newArgs = this.options.upscale ?
 							this._upscale(args) : args;
 			if (this.options.downGrade) {
 				if (this.options.emitOutput) {
-					this.output.emit(["log", ...newArgs]);
+					this.output.emit(["[log]", ...newArgs]);
 					if (this.options.logAfterEmit) {
 						this.defaultLog(...newArgs);
 					}
@@ -217,7 +244,7 @@ export class SmartConsoleService {
 				}
 			} else if (this.options.upgrade) {
 				if (this.options.emitOutput) {
-					this.output.emit(["error", ...newArgs]);
+					this.output.emit(["[error]", ...newArgs]);
 					if (this.options.logAfterEmit) {
 						this.defaultError(...newArgs);
 					}
@@ -226,7 +253,7 @@ export class SmartConsoleService {
 				}
 			} else {
 				if (this.options.emitOutput) {
-					this.output.emit(["warn", ...newArgs]);
+					this.output.emit(["[warn]", ...newArgs]);
 					if (this.options.logAfterEmit) {
 						this.defaultWarn(...newArgs);
 					}
@@ -239,13 +266,12 @@ export class SmartConsoleService {
 	}
 	private _error(...args) {
 		if ((this.options.errorDisabled === undefined || !this.options.errorDisabled) &&
-			!this._suppressed(args) &&
-			!this._blocked(args)) {
+			!this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
 			const newArgs = this.options.upscale ?
 							this._upscale(args) : args;
 			if (this.options.downGrade) {
 				if (this.options.emitOutput) {
-					this.output.emit(["log", ...newArgs]);
+					this.output.emit(["[log]", ...newArgs]);
 					if (this.options.logAfterEmit) {
 						this.defaultLog(...newArgs);
 					}
@@ -254,7 +280,7 @@ export class SmartConsoleService {
 				}
 			} else {
 				if (this.options.emitOutput) {
-					this.output.emit(["error", ...newArgs]);
+					this.output.emit(["[error]", ...newArgs]);
 					if (this.options.logAfterEmit) {
 						this.defaultError(...newArgs);
 					}
@@ -267,27 +293,27 @@ export class SmartConsoleService {
 	}
 	private _table(...args) {
 		if ((this.options.tableDisabled === undefined || !this.options.errorDisabled) &&
-			!this._suppressed(args) &&
-			!this._blocked(args)) {
-			const newArgs = this.options.upscale ?
-							this._upscale(args) : args;
+			!this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
 			if (this.options.emitOutput) {
-				this.output.emit(["table", ...newArgs]);
+				const newArgs = this.options.upscale ?
+				this._upscale(args) : args;
+				this.output.emit(["[table]", ...newArgs]);
 				if (this.options.logAfterEmit) {
-					this.defaultTable(...newArgs);
+					this.defaultTable(...args);
 				}
 			} else {
-				this.defaultTable(...newArgs);		
+				this.defaultTable(...args);		
 			}
 		}
 		this._reportWatch(args);
 	}
 	private _trace(...args) {
-		if ((this.options.traceDisabled === undefined || !this.options.traceDisabled)) {
+		if ((this.options.traceDisabled === undefined || !this.options.traceDisabled) && 
+			!this._throttle(args) ) {
 			const newArgs = this.options.upscale ?
 							this._upscale(args) : args;
 			if (this.options.emitOutput) {
-				this.output.emit(["trace", ...newArgs]);
+				this.output.emit(["[trace]", ...newArgs]);
 				if (this.options.logAfterEmit) {
 					this.defaultTrace(...newArgs);
 				}
@@ -298,9 +324,10 @@ export class SmartConsoleService {
 		this._reportWatch(args);
 	}
 	private _exception(...args) {
-		if ((this.options.exceptionDisabled === undefined || !this.options.exceptionDisabled)) {
+		if ((this.options.exceptionDisabled === undefined || !this.options.exceptionDisabled) && 
+			!this._throttle(args) ) {
 			if (this.options.emitOutput) {
-				this.output.emit(["exception", ...args]);
+				this.output.emit(["[exception]", ...args]);
 				if (this.options.logAfterEmit) {
 					this.defaultException(...args);
 				}
@@ -311,9 +338,10 @@ export class SmartConsoleService {
 		this._reportWatch(args);
 	}
 	private _debug(...args) {
-		if ((this.options.debugDisabled === undefined || !this.options.debugDisabled)) {
+		if ((this.options.debugDisabled === undefined || !this.options.debugDisabled) && 
+			!this._throttle(args) ) {
 			if (this.options.emitOutput) {
-				this.output.emit(["debug", ...args]);
+				this.output.emit(["[debug]", ...args]);
 				if (this.options.logAfterEmit) {
 					this.defaultDebug(...args);
 				}
@@ -324,9 +352,10 @@ export class SmartConsoleService {
 		this._reportWatch(args);
 	}
 	private _assert(...args) {
-		if ((this.options.assertDisabled === undefined || !this.options.assertDisabled)) {
+		if ((this.options.assertDisabled === undefined || !this.options.assertDisabled) && 
+			!this._throttle(args) ) {
 			if (this.options.emitOutput) {
-				this.output.emit(["assert", ...args]);
+				this.output.emit(["[assert]", ...args]);
 				if (this.options.logAfterEmit) {
 					this.defaultAssert(...args);
 				}
@@ -353,21 +382,33 @@ export class SmartConsoleService {
 		}
 		if (console.error) {
 			console.error = this._error.bind(this);
+		} else {
+			console.error = (...args) => {}
 		}
 		if (console.table) {
 			console.table = this._table.bind(this);
+		} else {
+			console.table = (...args) => {}
 		}
 		if (console.trace) {
 			console.trace = this._trace.bind(this);
+		} else {
+			console.trace = (...args) => {}
 		}
 		if (console.debug) {
 			console.debug = this._debug.bind(this);
+		} else {
+			console.debug = (...args) => {}
 		}
 		if (console.assert) {
 			console.assert = this._assert.bind(this);
+		} else {
+			console.assert = (...args) => {}
 		}
 		if (console.exception) {
 			console.exception = this._exception.bind(this);
+		} else {
+			console.exception = (...args) => {}
 		}
 	}
 	/*

@@ -123,6 +123,48 @@ var SmartConsoleService = /** @class */ (function () {
         return result;
     };
     /**
+     * @param {...?} args
+     * @return {?}
+     */
+    SmartConsoleService.prototype._throttle = /**
+     * @param {...?} args
+     * @return {?}
+     */
+    function () {
+        var _this = this;
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        /** @type {?} */
+        var result = false;
+        if (this.options.throttleOn && (args instanceof Array)) {
+            args.map(function (arg) {
+                if (arg instanceof Array) {
+                    arg.map(function (item) {
+                        /** @type {?} */
+                        var l = (typeof item === 'string') ? item.indexOf('level_') : -1;
+                        if (l === 0) {
+                            if (parseInt(item.substring(6), 10) <= _this.options.throttleOn) {
+                                result = true;
+                            }
+                        }
+                    });
+                }
+                else {
+                    /** @type {?} */
+                    var l = arg.indexOf('level_');
+                    if (l === 0) {
+                        if (parseInt(arg.substring(6), 10) <= _this.options.throttleOn) {
+                            result = true;
+                        }
+                    }
+                }
+            });
+        }
+        return result;
+    };
+    /**
      * @param {?} args
      * @return {?}
      */
@@ -201,14 +243,13 @@ var SmartConsoleService = /** @class */ (function () {
             args[_i] = arguments[_i];
         }
         if ((this.options.infoDisabled === undefined || !this.options.infoDisabled) &&
-            !this._suppressed(args) &&
-            !this._blocked(args)) {
+            !this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
             /** @type {?} */
             var newArgs = this.options.upscale ?
                 this._upscale(args) : args;
             if (this.options.upgrade) {
                 if (this.options.emitOutput) {
-                    this.output.emit(__spread(["log"], newArgs));
+                    this.output.emit(__spread(["[log]"], newArgs));
                     if (this.options.logAfterEmit) {
                         this.defaultLog.apply(this, __spread(newArgs));
                     }
@@ -219,7 +260,7 @@ var SmartConsoleService = /** @class */ (function () {
             }
             else {
                 if (this.options.emitOutput) {
-                    this.output.emit(__spread(["info"], newArgs));
+                    this.output.emit(__spread(["[info]"], newArgs));
                     if (this.options.logAfterEmit) {
                         this.defaultLog.apply(this, __spread(newArgs));
                     }
@@ -245,14 +286,13 @@ var SmartConsoleService = /** @class */ (function () {
             args[_i] = arguments[_i];
         }
         if ((this.options.logDisabled === undefined || !this.options.logDisabled) &&
-            !this._suppressed(args) &&
-            !this._blocked(args)) {
+            !this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
             /** @type {?} */
             var newArgs = this.options.upscale ?
                 this._upscale(args) : args;
             if (this.options.downGrade) {
                 if (this.options.emitOutput) {
-                    this.output.emit(__spread(["info"], newArgs));
+                    this.output.emit(__spread(["[info]"], newArgs));
                     if (this.options.logAfterEmit) {
                         this.defaultLog.apply(this, __spread(newArgs));
                     }
@@ -263,7 +303,7 @@ var SmartConsoleService = /** @class */ (function () {
             }
             else if (this.options.upgrade) {
                 if (this.options.emitOutput) {
-                    this.output.emit(__spread(["warn"], newArgs));
+                    this.output.emit(__spread(["[warn]"], newArgs));
                     if (this.options.logAfterEmit) {
                         this.defaultWarn.apply(this, __spread(newArgs));
                     }
@@ -274,7 +314,7 @@ var SmartConsoleService = /** @class */ (function () {
             }
             else {
                 if (this.options.emitOutput) {
-                    this.output.emit(__spread(["log"], newArgs));
+                    this.output.emit(__spread(["[log]"], newArgs));
                     if (this.options.logAfterEmit) {
                         this.defaultLog.apply(this, __spread(newArgs));
                     }
@@ -300,14 +340,13 @@ var SmartConsoleService = /** @class */ (function () {
             args[_i] = arguments[_i];
         }
         if ((this.options.warnDisabled === undefined || !this.options.warnDisabled) &&
-            !this._suppressed(args) &&
-            !this._blocked(args)) {
+            !this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
             /** @type {?} */
             var newArgs = this.options.upscale ?
                 this._upscale(args) : args;
             if (this.options.downGrade) {
                 if (this.options.emitOutput) {
-                    this.output.emit(__spread(["log"], newArgs));
+                    this.output.emit(__spread(["[log]"], newArgs));
                     if (this.options.logAfterEmit) {
                         this.defaultLog.apply(this, __spread(newArgs));
                     }
@@ -318,7 +357,7 @@ var SmartConsoleService = /** @class */ (function () {
             }
             else if (this.options.upgrade) {
                 if (this.options.emitOutput) {
-                    this.output.emit(__spread(["error"], newArgs));
+                    this.output.emit(__spread(["[error]"], newArgs));
                     if (this.options.logAfterEmit) {
                         this.defaultError.apply(this, __spread(newArgs));
                     }
@@ -329,7 +368,7 @@ var SmartConsoleService = /** @class */ (function () {
             }
             else {
                 if (this.options.emitOutput) {
-                    this.output.emit(__spread(["warn"], newArgs));
+                    this.output.emit(__spread(["[warn]"], newArgs));
                     if (this.options.logAfterEmit) {
                         this.defaultWarn.apply(this, __spread(newArgs));
                     }
@@ -355,14 +394,13 @@ var SmartConsoleService = /** @class */ (function () {
             args[_i] = arguments[_i];
         }
         if ((this.options.errorDisabled === undefined || !this.options.errorDisabled) &&
-            !this._suppressed(args) &&
-            !this._blocked(args)) {
+            !this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
             /** @type {?} */
             var newArgs = this.options.upscale ?
                 this._upscale(args) : args;
             if (this.options.downGrade) {
                 if (this.options.emitOutput) {
-                    this.output.emit(__spread(["log"], newArgs));
+                    this.output.emit(__spread(["[log]"], newArgs));
                     if (this.options.logAfterEmit) {
                         this.defaultLog.apply(this, __spread(newArgs));
                     }
@@ -373,7 +411,7 @@ var SmartConsoleService = /** @class */ (function () {
             }
             else {
                 if (this.options.emitOutput) {
-                    this.output.emit(__spread(["error"], newArgs));
+                    this.output.emit(__spread(["[error]"], newArgs));
                     if (this.options.logAfterEmit) {
                         this.defaultError.apply(this, __spread(newArgs));
                     }
@@ -399,19 +437,18 @@ var SmartConsoleService = /** @class */ (function () {
             args[_i] = arguments[_i];
         }
         if ((this.options.tableDisabled === undefined || !this.options.errorDisabled) &&
-            !this._suppressed(args) &&
-            !this._blocked(args)) {
-            /** @type {?} */
-            var newArgs = this.options.upscale ?
-                this._upscale(args) : args;
+            !this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
             if (this.options.emitOutput) {
-                this.output.emit(__spread(["table"], newArgs));
+                /** @type {?} */
+                var newArgs = this.options.upscale ?
+                    this._upscale(args) : args;
+                this.output.emit(__spread(["[table]"], newArgs));
                 if (this.options.logAfterEmit) {
-                    this.defaultTable.apply(this, __spread(newArgs));
+                    this.defaultTable.apply(this, __spread(args));
                 }
             }
             else {
-                this.defaultTable.apply(this, __spread(newArgs));
+                this.defaultTable.apply(this, __spread(args));
             }
         }
         this._reportWatch(args);
@@ -429,12 +466,13 @@ var SmartConsoleService = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
         }
-        if ((this.options.traceDisabled === undefined || !this.options.traceDisabled)) {
+        if ((this.options.traceDisabled === undefined || !this.options.traceDisabled) &&
+            !this._throttle(args)) {
             /** @type {?} */
             var newArgs = this.options.upscale ?
                 this._upscale(args) : args;
             if (this.options.emitOutput) {
-                this.output.emit(__spread(["trace"], newArgs));
+                this.output.emit(__spread(["[trace]"], newArgs));
                 if (this.options.logAfterEmit) {
                     this.defaultTrace.apply(this, __spread(newArgs));
                 }
@@ -458,9 +496,10 @@ var SmartConsoleService = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
         }
-        if ((this.options.exceptionDisabled === undefined || !this.options.exceptionDisabled)) {
+        if ((this.options.exceptionDisabled === undefined || !this.options.exceptionDisabled) &&
+            !this._throttle(args)) {
             if (this.options.emitOutput) {
-                this.output.emit(__spread(["exception"], args));
+                this.output.emit(__spread(["[exception]"], args));
                 if (this.options.logAfterEmit) {
                     this.defaultException.apply(this, __spread(args));
                 }
@@ -484,9 +523,10 @@ var SmartConsoleService = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
         }
-        if ((this.options.debugDisabled === undefined || !this.options.debugDisabled)) {
+        if ((this.options.debugDisabled === undefined || !this.options.debugDisabled) &&
+            !this._throttle(args)) {
             if (this.options.emitOutput) {
-                this.output.emit(__spread(["debug"], args));
+                this.output.emit(__spread(["[debug]"], args));
                 if (this.options.logAfterEmit) {
                     this.defaultDebug.apply(this, __spread(args));
                 }
@@ -510,9 +550,10 @@ var SmartConsoleService = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
         }
-        if ((this.options.assertDisabled === undefined || !this.options.assertDisabled)) {
+        if ((this.options.assertDisabled === undefined || !this.options.assertDisabled) &&
+            !this._throttle(args)) {
             if (this.options.emitOutput) {
-                this.output.emit(__spread(["assert"], args));
+                this.output.emit(__spread(["[assert]"], args));
                 if (this.options.logAfterEmit) {
                     this.defaultAssert.apply(this, __spread(args));
                 }
@@ -549,20 +590,68 @@ var SmartConsoleService = /** @class */ (function () {
         if (console.error) {
             console.error = this._error.bind(this);
         }
+        else {
+            console.error = function () {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i] = arguments[_i];
+                }
+            };
+        }
         if (console.table) {
             console.table = this._table.bind(this);
+        }
+        else {
+            console.table = function () {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i] = arguments[_i];
+                }
+            };
         }
         if (console.trace) {
             console.trace = this._trace.bind(this);
         }
+        else {
+            console.trace = function () {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i] = arguments[_i];
+                }
+            };
+        }
         if (console.debug) {
             console.debug = this._debug.bind(this);
+        }
+        else {
+            console.debug = function () {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i] = arguments[_i];
+                }
+            };
         }
         if (console.assert) {
             console.assert = this._assert.bind(this);
         }
+        else {
+            console.assert = function () {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i] = arguments[_i];
+                }
+            };
+        }
         if (console.exception) {
             console.exception = this._exception.bind(this);
+        }
+        else {
+            console.exception = function () {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i] = arguments[_i];
+                }
+            };
         }
     };
     /*

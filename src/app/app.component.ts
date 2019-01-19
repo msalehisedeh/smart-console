@@ -28,7 +28,8 @@ export class AppComponent {
     tableDisabled: false,
     downGrade: false,
     upgrade: false,
-    upscale: true,  
+    upscale: true,
+    throttleOn: 0,
     blockCaller: 'core.js,Zone.ts,MyComponent.ts',
     suppress: 'test3,test4',
     watch: 'sanitizing'
@@ -60,6 +61,9 @@ export class AppComponent {
   clear() {
     this.data = [];
     console.clear();
+  }
+  onChange(event) {
+    this.options.throttleOn = parseInt(event.target.value,10)
   }
 
   execute() {
@@ -107,6 +111,9 @@ export class AppComponent {
     if (this.options.logAfterEmit) {
       newOptions['logAfterEmit'] = true;
     }
+    if(this.options.throttleOn) {
+      newOptions['throttleOn'] = this.options.throttleOn;
+    }
     if (this.options.blockCaller) {
       newOptions['blockCaller'] = this.options.blockCaller.split(',');
     }
@@ -146,7 +153,12 @@ export class AppComponent {
     console.exception('exceptional',43343,"not!");
     console.debug('debug this bug',"1,2");
     console.table(["test","1","2"]);
-
+    console.log('level_3', 'message that may not be as imortant', 'additional info');
+    console.log('level_6', 'message that may be imortant', 'additional info');
+    console.info('level_6', 'message that may be imortant', 'additional info');
+    console.trace('level_5', 'message that may or may not be as imortant', 'additional info');
+    console.warn('level_5', 'message that may or may not be as imortant', 'additional info');
+  
     this._trace();
     console.assert(false, "asserting test!");
     this.http.get("https://api.flickr.com/services/rest/?&method=flickr.people.getPublicPhotos&format=json&api_key=API_KEY&user_id=USER_ID").subscribe(

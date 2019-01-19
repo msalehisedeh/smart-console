@@ -14,6 +14,7 @@ export interface SmartOptions {
     downGrade?: boolean;
     upgrade?: boolean;
     upscale?: boolean;
+    throttleOn?: number;
     blockCaller?: any[];
     suppress?: any[];
 }
@@ -34,6 +35,7 @@ export declare class SmartConsoleService {
     private _suppressed(...args);
     private _getStack();
     private _blocked(...args);
+    private _throttle(...args);
     private _reportWatch(args);
     private _upscale(...args);
     private _info(...args);

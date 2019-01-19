@@ -1,9 +1,9 @@
 # Welcome to Smart Console!
 
-Have you ever been in need of suppressing console logs? Have you thought of a tool that can help you suppress logs based on type, caller, level, or anything else that I cannot think of? And what if you just want to watch for occurrence of a log?
+Have you ever been in need of suppressing console logs? Have you thought of a tool that can help you suppress logs based on type, caller, level, or anything else that I cannot think of? Or maybe you DO NOT want to disable a log but want to throttle it! And what if you just want to watch for occurrence of a log? 
 You can use this tool to have your application do all of that and maybe a bit more! 
 
-**NOTE: ** http related 403, 500, ... logs are issued natively by zon.js as a result this tool has no control over them.
+**NOTE ** : http related 403, 500, ... logs are issued natively by zon.js as a result this tool has no control over them.
 
 **I appreciate comments and ideas to make this tool versatile.**
 
@@ -39,6 +39,7 @@ SmartOptions {
 	downGrade?: boolean,    // downgrade a log from warning to info or log to warning, or error to log.
 	upgrade?: boolean,      // upgrades a log from info to warning or warning to log, or log to error
 	upscale?: boolean,      // shows additional info on each log
+	throttleOn?: number,     // block logs less than provided message level (e.g., level_3 or level_5) in a log
 	blockCaller?: any[],    // blocks the caller
 	suppress?: any[]        // blocks per a keyword
 }
@@ -48,16 +49,22 @@ SmartOptions {
 ```javascript
 import { SmartConsoleService } from '@sedeh/smart-console';
 
-  constructor(private smartService: SmartConsoleService) {
-    this.smartService.makeSmartLogs(this.options);
-    this.smartService.redirectedOutput().subscribe(
+	// Example of configuring log service
+
+	constructor(private smartService: SmartConsoleService) {
+    	this.smartService.makeSmartLogs(this.options);
+	}
+	
+	// Example of providing listener if emitOutput of 
+	// options is configure as true.
+
+	this.smartService.redirectedOutput().subscribe(
       (event) => {
         this.myLogView.push(this.smartService.markupTrace(event));
       }
     );
-	}
-	
-	...
+
+	// Example of adding a watch on logs
 
 	const sbc = this.smartService
 					.addWatch(key)
@@ -72,14 +79,25 @@ import { SmartConsoleService } from '@sedeh/smart-console';
 
 	this.smartService.clearWatchList(this.watchSubscribers);
 
+	// Example for throttling logs if throttleOn of options
+	// is configured to 5, then all logs less than level_5
+	// will be blocked (the order of 'level_' location in 
+	// log is not important but if it is first, will be noticeable)
+	console.log('level_3', 'message that may not be as important', 'additional info');
+	console.log('level_6', 'message that may be important', 'additional info');
+	console.info('level_6', 'message that may be important', 'additional info');
+	console.trace('level_5', 'message that may or may not be as important', 'additional info');
+	console.warn('level_5', 'message that may or may not be as important', 'additional info');
+
 ```
 
 ## Releases
 
 | Version | Description                                                          |
 |---------|----------------------------------------------------------------------|
+|1.2.0    | Added throttling option in logs  .                                   |
 |1.1.2    | Added debug and exception methods.                                   |
-|1.1.1    | Fixed the watch code if a json is logged.                            |
+|1.1.1    | Fixed the watch code if a JSON is logged.                            |
 |1.1.0    | Added watch methods to make it possible for knowing if log is performed containing a particular key. |
 |1.0.4    | break lines on trace for Safari.                                     |
 |1.0.3    | Fixed issues on Safari and IE11 browsers.                            |

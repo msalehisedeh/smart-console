@@ -3,7 +3,7 @@
 Have you ever been in need of suppressing console logs? Have you thought of a tool that can help you suppress logs based on type, caller, level, or anything else that I cannot think of? Or maybe you DO NOT want to disable a log but want to throttle it! And what if you just want to watch for occurrence of a log? 
 You can use this tool to have your application do all of that and maybe a bit more! 
 
-**NOTE ** : http related 403, 500, ... logs are issued natively by zon.js as a result this tool has no control over them.
+**NOTE:** http related 403, 500, ... logs are issued natively by zon.js as a result they are out of JavaScript reach and this tool do not have any control over them.
 
 **I appreciate comments and ideas to make this tool versatile.**
 
@@ -48,24 +48,24 @@ SmartOptions {
 ### Examples
 ```javascript
 import { SmartConsoleService } from '@sedeh/smart-console';
+import { environment } from '../../environments/environment';
 
-	// Example of configuring log service
-
+	// Example of configuring log service based on environment where 
+	// options is configured. Alternatively, options could be defined 
+	// locally in app component instead of environment.
 	constructor(private smartService: SmartConsoleService) {
-    	this.smartService.makeSmartLogs(this.options);
+		this.smartService.makeSmartLogs(environment.options);
 	}
 	
 	// Example of providing listener if emitOutput of 
 	// options is configure as true.
-
 	this.smartService.redirectedOutput().subscribe(
-      (event) => {
-        this.myLogView.push(this.smartService.markupTrace(event));
-      }
-    );
+		(event) => {
+			this.myLogView.push(this.smartService.markupTrace(event));
+		}
+	);
 
 	// Example of adding a watch on logs
-
 	const sbc = this.smartService
 					.addWatch(key)
 					.subscribe(
@@ -75,13 +75,12 @@ import { SmartConsoleService } from '@sedeh/smart-console';
 					);
 	this.watchSubscribers.push(sbc);
 	
-	...
-
+	// maybe onDestroy or somewhere else you need to clear the watch list.
 	this.smartService.clearWatchList(this.watchSubscribers);
 
 	// Example for throttling logs if throttleOn of options
-	// is configured to 5, then all logs less than level_5
-	// will be blocked (the order of 'level_' location in 
+	// is configured to 5, then all logs less than or equal to
+	// level_5 will be blocked (the order of 'level_' location in 
 	// log is not important but if it is first, will be noticeable)
 	console.log('level_3', 'message that may not be as important', 'additional info');
 	console.log('level_6', 'message that may be important', 'additional info');
@@ -95,7 +94,8 @@ import { SmartConsoleService } from '@sedeh/smart-console';
 
 | Version | Description                                                          |
 |---------|----------------------------------------------------------------------|
-|1.2.0    | Added throttling option in logs  .                                   |
+|1.2.1    | Updated Readme file.                                                 |
+|1.2.0    | Added throttling option in logs.                                     |
 |1.1.2    | Added debug and exception methods.                                   |
 |1.1.1    | Fixed the watch code if a JSON is logged.                            |
 |1.1.0    | Added watch methods to make it possible for knowing if log is performed containing a particular key. |

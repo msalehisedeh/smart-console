@@ -94,6 +94,7 @@ import { environment } from '../../environments/environment';
 
 | Version | Description                                                          |
 |---------|----------------------------------------------------------------------|
+|1.2.2    | fixed dependencies.                                                  |
 |1.2.1    | Updated Readme file.                                                 |
 |1.2.0    | Added throttling option in logs.                                     |
 |1.1.2    | Added debug and exception methods.                                   |

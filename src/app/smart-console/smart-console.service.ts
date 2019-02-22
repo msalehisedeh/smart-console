@@ -19,10 +19,16 @@ export interface SmartOptions {
 	upscale?: boolean,       // shows additional info on each log
 	throttleOn?: number,     // block logs less than provided message level (e.g., level_3 or level_5) in a log
 	blockCaller?: any[],     // blocks the caller
-	suppress?: any[]         // blocks per a keyword
+	suppress?: any[],        // blocks per a keyword
+	filter?: any[]           // will eliminate any log that is not in the filter list. void if list is empty or 
+							 // undefined. opposit of suppress. if supplied, suppress will only be effective when 
+							 // one of the keywords has passed filtering and another keyword in the same log is 
+							 // in suppress list. Filter applies to all logs.
 }
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class SmartConsoleService {
 	private options: SmartOptions;
 	private defaultLog = console.log;
@@ -63,6 +69,20 @@ export class SmartConsoleService {
 		if (this.options.suppress) {
 			const x = this._argsToString(args);
 			this.options.suppress.map(
+				(item) => {
+					if (x.indexOf(item) > -1) {
+						result = true;
+					}
+				}
+			);
+		}
+		return result;
+	}
+	private _filtered(...args) {
+		let result = !this.options.filter || this.options.filter.length === 0;
+		if (this.options.filter) {
+			const x = this._argsToString(args);
+			this.options.filter.map(
 				(item) => {
 					if (x.indexOf(item) > -1) {
 						result = true;
@@ -166,7 +186,8 @@ export class SmartConsoleService {
 	}
 	private _info(...args) {
 		if ((this.options.infoDisabled === undefined || !this.options.infoDisabled) &&
-			!this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
+			this._filtered(args) && !this._suppressed && 
+			!this._throttle(args) && !this._blocked(args)) {
 			const newArgs = this.options.upscale ?
 							this._upscale(args) : args;
 			
@@ -194,7 +215,8 @@ export class SmartConsoleService {
 	}
 	private _log(...args) {
 		if ((this.options.logDisabled === undefined || !this.options.logDisabled) &&
-			!this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
+			this._filtered(args) && !this._suppressed && 
+			!this._throttle(args) && !this._blocked(args)) {
 			const newArgs = this.options.upscale ?
 							this._upscale(args) : args;
 			if (this.options.downGrade) {
@@ -230,7 +252,8 @@ export class SmartConsoleService {
 	}
 	private _warn(...args) {
 		if ((this.options.warnDisabled === undefined || !this.options.warnDisabled) &&
-			!this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
+			this._filtered(args) && !this._suppressed(args) && 
+			!this._throttle(args) && !this._blocked(args)) {
 			const newArgs = this.options.upscale ?
 							this._upscale(args) : args;
 			if (this.options.downGrade) {
@@ -266,7 +289,8 @@ export class SmartConsoleService {
 	}
 	private _error(...args) {
 		if ((this.options.errorDisabled === undefined || !this.options.errorDisabled) &&
-			!this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
+			this._filtered(args) && !this._suppressed(args) && 
+			!this._throttle(args) && !this._blocked(args)) {
 			const newArgs = this.options.upscale ?
 							this._upscale(args) : args;
 			if (this.options.downGrade) {
@@ -293,7 +317,8 @@ export class SmartConsoleService {
 	}
 	private _table(...args) {
 		if ((this.options.tableDisabled === undefined || !this.options.errorDisabled) &&
-			!this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
+			this._filtered(args) && !this._suppressed && 
+			!this._throttle(args) && !this._blocked(args)) {
 			if (this.options.emitOutput) {
 				const newArgs = this.options.upscale ?
 				this._upscale(args) : args;
@@ -309,7 +334,7 @@ export class SmartConsoleService {
 	}
 	private _trace(...args) {
 		if ((this.options.traceDisabled === undefined || !this.options.traceDisabled) && 
-			!this._throttle(args) ) {
+			this._filtered(args) && !this._throttle(args) ) {
 			const newArgs = this.options.upscale ?
 							this._upscale(args) : args;
 			if (this.options.emitOutput) {
@@ -325,7 +350,7 @@ export class SmartConsoleService {
 	}
 	private _exception(...args) {
 		if ((this.options.exceptionDisabled === undefined || !this.options.exceptionDisabled) && 
-			!this._throttle(args) ) {
+			this._filtered(args) && !this._throttle(args) ) {
 			if (this.options.emitOutput) {
 				this.output.emit(["[exception]", ...args]);
 				if (this.options.logAfterEmit) {
@@ -339,7 +364,7 @@ export class SmartConsoleService {
 	}
 	private _debug(...args) {
 		if ((this.options.debugDisabled === undefined || !this.options.debugDisabled) && 
-			!this._throttle(args) ) {
+			this._filtered(args) && !this._throttle(args) ) {
 			if (this.options.emitOutput) {
 				this.output.emit(["[debug]", ...args]);
 				if (this.options.logAfterEmit) {
@@ -353,7 +378,7 @@ export class SmartConsoleService {
 	}
 	private _assert(...args) {
 		if ((this.options.assertDisabled === undefined || !this.options.assertDisabled) && 
-			!this._throttle(args) ) {
+			this._filtered(args) && !this._throttle(args) ) {
 			if (this.options.emitOutput) {
 				this.output.emit(["[assert]", ...args]);
 				if (this.options.logAfterEmit) {

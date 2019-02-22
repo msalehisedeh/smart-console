@@ -32,6 +32,7 @@ export class AppComponent {
     throttleOn: 0,
     blockCaller: 'core.js,Zone.ts,MyComponent.ts',
     suppress: 'test3,test4',
+    filter: '',
     watch: 'sanitizing'
   };
 
@@ -55,7 +56,7 @@ export class AppComponent {
   }
 
   keyup(item: string, event: any) {
-    this.options[item] = event.target.value;
+    this.options[item] = event.target.value.trim();
   }
 
   clear() {
@@ -116,6 +117,9 @@ export class AppComponent {
     }
     if (this.options.blockCaller) {
       newOptions['blockCaller'] = this.options.blockCaller.split(',');
+    }
+    if (this.options.filter) {
+      newOptions['filter'] = this.options.filter.split(',');
     }
     if (this.options.suppress) {
       newOptions['suppress'] = this.options.suppress.split(',');

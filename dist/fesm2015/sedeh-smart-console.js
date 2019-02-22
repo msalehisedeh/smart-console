@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Injectable, EventEmitter, NgModule, CUSTOM_ELEMENTS_SCHEMA, defineInjectable } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 /**
@@ -57,6 +57,24 @@ class SmartConsoleService {
             /** @type {?} */
             const x = this._argsToString(args);
             this.options.suppress.map((item) => {
+                if (x.indexOf(item) > -1) {
+                    result = true;
+                }
+            });
+        }
+        return result;
+    }
+    /**
+     * @param {...?} args
+     * @return {?}
+     */
+    _filtered(...args) {
+        /** @type {?} */
+        let result = !this.options.filter || this.options.filter.length === 0;
+        if (this.options.filter) {
+            /** @type {?} */
+            const x = this._argsToString(args);
+            this.options.filter.map((item) => {
                 if (x.indexOf(item) > -1) {
                     result = true;
                 }
@@ -188,7 +206,8 @@ class SmartConsoleService {
      */
     _info(...args) {
         if ((this.options.infoDisabled === undefined || !this.options.infoDisabled) &&
-            !this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
+            this._filtered(args) && !this._suppressed &&
+            !this._throttle(args) && !this._blocked(args)) {
             /** @type {?} */
             const newArgs = this.options.upscale ?
                 this._upscale(args) : args;
@@ -223,7 +242,8 @@ class SmartConsoleService {
      */
     _log(...args) {
         if ((this.options.logDisabled === undefined || !this.options.logDisabled) &&
-            !this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
+            this._filtered(args) && !this._suppressed &&
+            !this._throttle(args) && !this._blocked(args)) {
             /** @type {?} */
             const newArgs = this.options.upscale ?
                 this._upscale(args) : args;
@@ -269,7 +289,8 @@ class SmartConsoleService {
      */
     _warn(...args) {
         if ((this.options.warnDisabled === undefined || !this.options.warnDisabled) &&
-            !this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
+            this._filtered(args) && !this._suppressed(args) &&
+            !this._throttle(args) && !this._blocked(args)) {
             /** @type {?} */
             const newArgs = this.options.upscale ?
                 this._upscale(args) : args;
@@ -315,7 +336,8 @@ class SmartConsoleService {
      */
     _error(...args) {
         if ((this.options.errorDisabled === undefined || !this.options.errorDisabled) &&
-            !this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
+            this._filtered(args) && !this._suppressed(args) &&
+            !this._throttle(args) && !this._blocked(args)) {
             /** @type {?} */
             const newArgs = this.options.upscale ?
                 this._upscale(args) : args;
@@ -350,7 +372,8 @@ class SmartConsoleService {
      */
     _table(...args) {
         if ((this.options.tableDisabled === undefined || !this.options.errorDisabled) &&
-            !this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
+            this._filtered(args) && !this._suppressed &&
+            !this._throttle(args) && !this._blocked(args)) {
             if (this.options.emitOutput) {
                 /** @type {?} */
                 const newArgs = this.options.upscale ?
@@ -372,7 +395,7 @@ class SmartConsoleService {
      */
     _trace(...args) {
         if ((this.options.traceDisabled === undefined || !this.options.traceDisabled) &&
-            !this._throttle(args)) {
+            this._filtered(args) && !this._throttle(args)) {
             /** @type {?} */
             const newArgs = this.options.upscale ?
                 this._upscale(args) : args;
@@ -394,7 +417,7 @@ class SmartConsoleService {
      */
     _exception(...args) {
         if ((this.options.exceptionDisabled === undefined || !this.options.exceptionDisabled) &&
-            !this._throttle(args)) {
+            this._filtered(args) && !this._throttle(args)) {
             if (this.options.emitOutput) {
                 this.output.emit(["[exception]", ...args]);
                 if (this.options.logAfterEmit) {
@@ -413,7 +436,7 @@ class SmartConsoleService {
      */
     _debug(...args) {
         if ((this.options.debugDisabled === undefined || !this.options.debugDisabled) &&
-            !this._throttle(args)) {
+            this._filtered(args) && !this._throttle(args)) {
             if (this.options.emitOutput) {
                 this.output.emit(["[debug]", ...args]);
                 if (this.options.logAfterEmit) {
@@ -432,7 +455,7 @@ class SmartConsoleService {
      */
     _assert(...args) {
         if ((this.options.assertDisabled === undefined || !this.options.assertDisabled) &&
-            !this._throttle(args)) {
+            this._filtered(args) && !this._throttle(args)) {
             if (this.options.emitOutput) {
                 this.output.emit(["[assert]", ...args]);
                 if (this.options.logAfterEmit) {
@@ -615,14 +638,28 @@ class SmartConsoleService {
     }
 }
 SmartConsoleService.decorators = [
-    { type: Injectable }
+    { type: Injectable, args: [{
+                providedIn: 'root'
+            },] }
 ];
+/** @nocollapse */ SmartConsoleService.ngInjectableDef = defineInjectable({ factory: function SmartConsoleService_Factory() { return new SmartConsoleService(); }, token: SmartConsoleService, providedIn: "root" });
 
 /**
  * @fileoverview added by tsickle
  * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
  */
 class SmartConsoleModule {
+    /**
+     * @return {?}
+     */
+    static forRoot() {
+        return {
+            ngModule: SmartConsoleModule,
+            providers: [
+                SmartConsoleService
+            ]
+        };
+    }
 }
 SmartConsoleModule.decorators = [
     { type: NgModule, args: [{

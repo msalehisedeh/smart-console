@@ -39,9 +39,14 @@ SmartOptions {
 	downGrade?: boolean,    // downgrade a log from warning to info or log to warning, or error to log.
 	upgrade?: boolean,      // upgrades a log from info to warning or warning to log, or log to error
 	upscale?: boolean,      // shows additional info on each log
-	throttleOn?: number,     // block logs less than provided message level (e.g., level_3 or level_5) in a log
+	throttleOn?: number,    // block logs less than provided message level (e.g., level_3 or level_5) in a log
 	blockCaller?: any[],    // blocks the caller
-	suppress?: any[]        // blocks per a keyword
+	suppress?: any[],       // blocks per a keyword
+	filter?: any[]          // will eliminate any log that is not in the filter list. void if list 
+							// is empty or undefined. opposit of suppress. if supplied, suppress will 
+							// only be effective when one of the keywords has passed filtering and 
+							// another keyword in the same log is in suppress list. Filter applies
+							// to all logs.
 }
 ```
 
@@ -94,7 +99,7 @@ import { environment } from '../../environments/environment';
 
 | Version | Description                                                          |
 |---------|----------------------------------------------------------------------|
-|1.2.2    | fixed dependencies.                                                  |
+|1.2.2    | Added filtering option as per requested in issue 1 on github.        |
 |1.2.1    | Updated Readme file.                                                 |
 |1.2.0    | Added throttling option in logs.                                     |
 |1.1.2    | Added debug and exception methods.                                   |

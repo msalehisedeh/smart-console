@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule, ModuleWithProviders, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { SmartConsoleService } from './smart-console.service';
@@ -10,4 +10,13 @@ import { SmartConsoleService } from './smart-console.service';
   providers: [SmartConsoleService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class SmartConsoleModule { }
+export class SmartConsoleModule { 
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: SmartConsoleModule,
+      providers: [
+        SmartConsoleService
+      ]
+    }
+  }
+}

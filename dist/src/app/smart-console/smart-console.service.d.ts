@@ -17,6 +17,7 @@ export interface SmartOptions {
     throttleOn?: number;
     blockCaller?: any[];
     suppress?: any[];
+    filter?: any[];
 }
 export declare class SmartConsoleService {
     private options;
@@ -33,6 +34,7 @@ export declare class SmartConsoleService {
     private watchList;
     private _argsToString(args);
     private _suppressed(...args);
+    private _filtered(...args);
     private _getStack();
     private _blocked(...args);
     private _throttle(...args);

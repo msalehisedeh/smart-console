@@ -2,7 +2,7 @@
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('@angular/common')) :
     typeof define === 'function' && define.amd ? define('@sedeh/smart-console', ['exports', '@angular/core', '@angular/common'], factory) :
     (factory((global.sedeh = global.sedeh || {}, global.sedeh['smart-console'] = {}),global.ng.core,global.ng.common));
-}(this, (function (exports,core,common) { 'use strict';
+}(this, (function (exports,i0,common) { 'use strict';
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation. All rights reserved.
@@ -63,7 +63,7 @@
             this.defaultAssert = console.assert;
             this.defaultException = console.exception;
             this.defaultDebug = console.debug;
-            this.output = new core.EventEmitter();
+            this.output = new i0.EventEmitter();
             this.watchList = {};
         }
         /**
@@ -117,6 +117,32 @@
                     var x_1 = this._argsToString(args);
                     this.options.suppress.map(function (item) {
                         if (x_1.indexOf(item) > -1) {
+                            result = true;
+                        }
+                    });
+                }
+                return result;
+            };
+        /**
+         * @param {...?} args
+         * @return {?}
+         */
+        SmartConsoleService.prototype._filtered = /**
+         * @param {...?} args
+         * @return {?}
+         */
+            function () {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i] = arguments[_i];
+                }
+                /** @type {?} */
+                var result = !this.options.filter || this.options.filter.length === 0;
+                if (this.options.filter) {
+                    /** @type {?} */
+                    var x_2 = this._argsToString(args);
+                    this.options.filter.map(function (item) {
+                        if (x_2.indexOf(item) > -1) {
                             result = true;
                         }
                     });
@@ -289,7 +315,8 @@
                     args[_i] = arguments[_i];
                 }
                 if ((this.options.infoDisabled === undefined || !this.options.infoDisabled) &&
-                    !this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
+                    this._filtered(args) && !this._suppressed &&
+                    !this._throttle(args) && !this._blocked(args)) {
                     /** @type {?} */
                     var newArgs = this.options.upscale ?
                         this._upscale(args) : args;
@@ -332,7 +359,8 @@
                     args[_i] = arguments[_i];
                 }
                 if ((this.options.logDisabled === undefined || !this.options.logDisabled) &&
-                    !this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
+                    this._filtered(args) && !this._suppressed &&
+                    !this._throttle(args) && !this._blocked(args)) {
                     /** @type {?} */
                     var newArgs = this.options.upscale ?
                         this._upscale(args) : args;
@@ -386,7 +414,8 @@
                     args[_i] = arguments[_i];
                 }
                 if ((this.options.warnDisabled === undefined || !this.options.warnDisabled) &&
-                    !this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
+                    this._filtered(args) && !this._suppressed(args) &&
+                    !this._throttle(args) && !this._blocked(args)) {
                     /** @type {?} */
                     var newArgs = this.options.upscale ?
                         this._upscale(args) : args;
@@ -440,7 +469,8 @@
                     args[_i] = arguments[_i];
                 }
                 if ((this.options.errorDisabled === undefined || !this.options.errorDisabled) &&
-                    !this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
+                    this._filtered(args) && !this._suppressed(args) &&
+                    !this._throttle(args) && !this._blocked(args)) {
                     /** @type {?} */
                     var newArgs = this.options.upscale ?
                         this._upscale(args) : args;
@@ -483,7 +513,8 @@
                     args[_i] = arguments[_i];
                 }
                 if ((this.options.tableDisabled === undefined || !this.options.errorDisabled) &&
-                    !this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
+                    this._filtered(args) && !this._suppressed &&
+                    !this._throttle(args) && !this._blocked(args)) {
                     if (this.options.emitOutput) {
                         /** @type {?} */
                         var newArgs = this.options.upscale ?
@@ -513,7 +544,7 @@
                     args[_i] = arguments[_i];
                 }
                 if ((this.options.traceDisabled === undefined || !this.options.traceDisabled) &&
-                    !this._throttle(args)) {
+                    this._filtered(args) && !this._throttle(args)) {
                     /** @type {?} */
                     var newArgs = this.options.upscale ?
                         this._upscale(args) : args;
@@ -543,7 +574,7 @@
                     args[_i] = arguments[_i];
                 }
                 if ((this.options.exceptionDisabled === undefined || !this.options.exceptionDisabled) &&
-                    !this._throttle(args)) {
+                    this._filtered(args) && !this._throttle(args)) {
                     if (this.options.emitOutput) {
                         this.output.emit(__spread(["[exception]"], args));
                         if (this.options.logAfterEmit) {
@@ -570,7 +601,7 @@
                     args[_i] = arguments[_i];
                 }
                 if ((this.options.debugDisabled === undefined || !this.options.debugDisabled) &&
-                    !this._throttle(args)) {
+                    this._filtered(args) && !this._throttle(args)) {
                     if (this.options.emitOutput) {
                         this.output.emit(__spread(["[debug]"], args));
                         if (this.options.logAfterEmit) {
@@ -597,7 +628,7 @@
                     args[_i] = arguments[_i];
                 }
                 if ((this.options.assertDisabled === undefined || !this.options.assertDisabled) &&
-                    !this._throttle(args)) {
+                    this._filtered(args) && !this._throttle(args)) {
                     if (this.options.emitOutput) {
                         this.output.emit(__spread(["[assert]"], args));
                         if (this.options.logAfterEmit) {
@@ -726,7 +757,7 @@
          */
             function (key) {
                 if (!this.watchList[key]) {
-                    this.watchList[key] = new core.EventEmitter();
+                    this.watchList[key] = new i0.EventEmitter();
                 }
                 return this.watchList[key];
             };
@@ -857,8 +888,11 @@
                 return result;
             };
         SmartConsoleService.decorators = [
-            { type: core.Injectable }
+            { type: i0.Injectable, args: [{
+                        providedIn: 'root'
+                    },] }
         ];
+        /** @nocollapse */ SmartConsoleService.ngInjectableDef = i0.defineInjectable({ factory: function SmartConsoleService_Factory() { return new SmartConsoleService(); }, token: SmartConsoleService, providedIn: "root" });
         return SmartConsoleService;
     }());
 
@@ -869,13 +903,27 @@
     var SmartConsoleModule = (function () {
         function SmartConsoleModule() {
         }
+        /**
+         * @return {?}
+         */
+        SmartConsoleModule.forRoot = /**
+         * @return {?}
+         */
+            function () {
+                return {
+                    ngModule: SmartConsoleModule,
+                    providers: [
+                        SmartConsoleService
+                    ]
+                };
+            };
         SmartConsoleModule.decorators = [
-            { type: core.NgModule, args: [{
+            { type: i0.NgModule, args: [{
                         declarations: [],
                         exports: [],
                         imports: [common.CommonModule],
                         providers: [SmartConsoleService],
-                        schemas: [core.CUSTOM_ELEMENTS_SCHEMA]
+                        schemas: [i0.CUSTOM_ELEMENTS_SCHEMA]
                     },] }
         ];
         return SmartConsoleModule;

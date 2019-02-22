@@ -166,6 +166,13 @@
     </label>
   </span>
   <span>
+    <label for="filter">
+      filter Logs based on keywords (comma separated): 
+      <input id="filter" [value]="options.filter"  
+        (keyup)="keyup('filter', $event)"/>
+    </label>
+  </span>
+  <span>
     <label for="watch">
       Notify me when any one of the following keywords are in a log (comma separated): 
       <input id="watch" [value]="options.watch"  

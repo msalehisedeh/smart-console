@@ -1,5 +1,5 @@
 import { __spread } from 'tslib';
-import { Injectable, EventEmitter, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Injectable, EventEmitter, NgModule, CUSTOM_ELEMENTS_SCHEMA, defineInjectable } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 /**
@@ -71,6 +71,32 @@ var SmartConsoleService = /** @class */ (function () {
             var x_1 = this._argsToString(args);
             this.options.suppress.map(function (item) {
                 if (x_1.indexOf(item) > -1) {
+                    result = true;
+                }
+            });
+        }
+        return result;
+    };
+    /**
+     * @param {...?} args
+     * @return {?}
+     */
+    SmartConsoleService.prototype._filtered = /**
+     * @param {...?} args
+     * @return {?}
+     */
+    function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        /** @type {?} */
+        var result = !this.options.filter || this.options.filter.length === 0;
+        if (this.options.filter) {
+            /** @type {?} */
+            var x_2 = this._argsToString(args);
+            this.options.filter.map(function (item) {
+                if (x_2.indexOf(item) > -1) {
                     result = true;
                 }
             });
@@ -243,7 +269,8 @@ var SmartConsoleService = /** @class */ (function () {
             args[_i] = arguments[_i];
         }
         if ((this.options.infoDisabled === undefined || !this.options.infoDisabled) &&
-            !this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
+            this._filtered(args) && !this._suppressed &&
+            !this._throttle(args) && !this._blocked(args)) {
             /** @type {?} */
             var newArgs = this.options.upscale ?
                 this._upscale(args) : args;
@@ -286,7 +313,8 @@ var SmartConsoleService = /** @class */ (function () {
             args[_i] = arguments[_i];
         }
         if ((this.options.logDisabled === undefined || !this.options.logDisabled) &&
-            !this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
+            this._filtered(args) && !this._suppressed &&
+            !this._throttle(args) && !this._blocked(args)) {
             /** @type {?} */
             var newArgs = this.options.upscale ?
                 this._upscale(args) : args;
@@ -340,7 +368,8 @@ var SmartConsoleService = /** @class */ (function () {
             args[_i] = arguments[_i];
         }
         if ((this.options.warnDisabled === undefined || !this.options.warnDisabled) &&
-            !this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
+            this._filtered(args) && !this._suppressed(args) &&
+            !this._throttle(args) && !this._blocked(args)) {
             /** @type {?} */
             var newArgs = this.options.upscale ?
                 this._upscale(args) : args;
@@ -394,7 +423,8 @@ var SmartConsoleService = /** @class */ (function () {
             args[_i] = arguments[_i];
         }
         if ((this.options.errorDisabled === undefined || !this.options.errorDisabled) &&
-            !this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
+            this._filtered(args) && !this._suppressed(args) &&
+            !this._throttle(args) && !this._blocked(args)) {
             /** @type {?} */
             var newArgs = this.options.upscale ?
                 this._upscale(args) : args;
@@ -437,7 +467,8 @@ var SmartConsoleService = /** @class */ (function () {
             args[_i] = arguments[_i];
         }
         if ((this.options.tableDisabled === undefined || !this.options.errorDisabled) &&
-            !this._suppressed(args) && !this._throttle(args) && !this._blocked(args)) {
+            this._filtered(args) && !this._suppressed &&
+            !this._throttle(args) && !this._blocked(args)) {
             if (this.options.emitOutput) {
                 /** @type {?} */
                 var newArgs = this.options.upscale ?
@@ -467,7 +498,7 @@ var SmartConsoleService = /** @class */ (function () {
             args[_i] = arguments[_i];
         }
         if ((this.options.traceDisabled === undefined || !this.options.traceDisabled) &&
-            !this._throttle(args)) {
+            this._filtered(args) && !this._throttle(args)) {
             /** @type {?} */
             var newArgs = this.options.upscale ?
                 this._upscale(args) : args;
@@ -497,7 +528,7 @@ var SmartConsoleService = /** @class */ (function () {
             args[_i] = arguments[_i];
         }
         if ((this.options.exceptionDisabled === undefined || !this.options.exceptionDisabled) &&
-            !this._throttle(args)) {
+            this._filtered(args) && !this._throttle(args)) {
             if (this.options.emitOutput) {
                 this.output.emit(__spread(["[exception]"], args));
                 if (this.options.logAfterEmit) {
@@ -524,7 +555,7 @@ var SmartConsoleService = /** @class */ (function () {
             args[_i] = arguments[_i];
         }
         if ((this.options.debugDisabled === undefined || !this.options.debugDisabled) &&
-            !this._throttle(args)) {
+            this._filtered(args) && !this._throttle(args)) {
             if (this.options.emitOutput) {
                 this.output.emit(__spread(["[debug]"], args));
                 if (this.options.logAfterEmit) {
@@ -551,7 +582,7 @@ var SmartConsoleService = /** @class */ (function () {
             args[_i] = arguments[_i];
         }
         if ((this.options.assertDisabled === undefined || !this.options.assertDisabled) &&
-            !this._throttle(args)) {
+            this._filtered(args) && !this._throttle(args)) {
             if (this.options.emitOutput) {
                 this.output.emit(__spread(["[assert]"], args));
                 if (this.options.logAfterEmit) {
@@ -811,8 +842,11 @@ var SmartConsoleService = /** @class */ (function () {
         return result;
     };
     SmartConsoleService.decorators = [
-        { type: Injectable }
+        { type: Injectable, args: [{
+                    providedIn: 'root'
+                },] }
     ];
+    /** @nocollapse */ SmartConsoleService.ngInjectableDef = defineInjectable({ factory: function SmartConsoleService_Factory() { return new SmartConsoleService(); }, token: SmartConsoleService, providedIn: "root" });
     return SmartConsoleService;
 }());
 
@@ -823,6 +857,20 @@ var SmartConsoleService = /** @class */ (function () {
 var SmartConsoleModule = /** @class */ (function () {
     function SmartConsoleModule() {
     }
+    /**
+     * @return {?}
+     */
+    SmartConsoleModule.forRoot = /**
+     * @return {?}
+     */
+    function () {
+        return {
+            ngModule: SmartConsoleModule,
+            providers: [
+                SmartConsoleService
+            ]
+        };
+    };
     SmartConsoleModule.decorators = [
         { type: NgModule, args: [{
                     declarations: [],

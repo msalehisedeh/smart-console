@@ -1,11 +1,8 @@
-import { Injectable, EventEmitter, NgModule, CUSTOM_ELEMENTS_SCHEMA, defineInjectable } from '@angular/core';
+import { __decorate } from 'tslib';
+import { EventEmitter, ɵɵdefineInjectable, Injectable, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
- */
-class SmartConsoleService {
+let SmartConsoleService = class SmartConsoleService {
     constructor() {
         this.defaultLog = console.log;
         this.defaultInfo = console.info;
@@ -19,12 +16,7 @@ class SmartConsoleService {
         this.output = new EventEmitter();
         this.watchList = {};
     }
-    /**
-     * @param {?} args
-     * @return {?}
-     */
     _argsToString(args) {
-        /** @type {?} */
         let result = [];
         args.map((arg) => {
             if (typeof arg === 'object') {
@@ -46,15 +38,9 @@ class SmartConsoleService {
         });
         return result.join(',');
     }
-    /**
-     * @param {...?} args
-     * @return {?}
-     */
     _suppressed(...args) {
-        /** @type {?} */
         let result = false;
         if (this.options.suppress) {
-            /** @type {?} */
             const x = this._argsToString(args);
             this.options.suppress.map((item) => {
                 if (x.indexOf(item) > -1) {
@@ -64,15 +50,9 @@ class SmartConsoleService {
         }
         return result;
     }
-    /**
-     * @param {...?} args
-     * @return {?}
-     */
     _filtered(...args) {
-        /** @type {?} */
         let result = !this.options.filter || this.options.filter.length === 0;
         if (this.options.filter) {
-            /** @type {?} */
             const x = this._argsToString(args);
             this.options.filter.map((item) => {
                 if (x.indexOf(item) > -1) {
@@ -82,11 +62,10 @@ class SmartConsoleService {
         }
         return result;
     }
-    /**
-     * @return {?}
-     */
     _getStack() {
-        /** @type {?} */
+        // this method purpose is only to fix IE issue. 
+        // in IE, new Error().stack  will be undefined
+        // unless it is caugth in try block statement.
         let stack = '';
         try {
             throw new Error('getStack');
@@ -98,15 +77,9 @@ class SmartConsoleService {
         }
         return stack;
     }
-    /**
-     * @param {...?} args
-     * @return {?}
-     */
     _blocked(...args) {
-        /** @type {?} */
         let result = false;
         if (this.options.blockCaller) {
-            /** @type {?} */
             const stack = this._getStack();
             this.options.blockCaller.map((item) => {
                 if (stack.indexOf(item) > -1) {
@@ -116,18 +89,12 @@ class SmartConsoleService {
         }
         return result;
     }
-    /**
-     * @param {...?} args
-     * @return {?}
-     */
     _throttle(...args) {
-        /** @type {?} */
         let result = false;
         if (this.options.throttleOn && (args instanceof Array)) {
             args.map((arg) => {
                 if (arg instanceof Array) {
                     arg.map((item) => {
-                        /** @type {?} */
                         const l = (typeof item === 'string') ? item.indexOf('level_') : -1;
                         if (l === 0) {
                             if (parseInt(item.substring(6), 10) <= this.options.throttleOn) {
@@ -137,7 +104,6 @@ class SmartConsoleService {
                     });
                 }
                 else {
-                    /** @type {?} */
                     const l = arg.indexOf('level_');
                     if (l === 0) {
                         if (parseInt(arg.substring(6), 10) <= this.options.throttleOn) {
@@ -149,48 +115,30 @@ class SmartConsoleService {
         }
         return result;
     }
-    /**
-     * @param {?} args
-     * @return {?}
-     */
     _reportWatch(args) {
-        /** @type {?} */
         const list = Object.keys(this.watchList);
         if (list.length) {
             try {
-                /** @type {?} */
                 const logStr = this._argsToString(args);
                 list.map((key) => {
                     if (logStr.indexOf(key) > -1) {
                         this.watchList[key].emit(args);
                     }
+                    ;
                 });
             }
             catch (e) { }
         }
     }
-    /**
-     * @param {...?} args
-     * @return {?}
-     */
     _upscale(...args) {
-        /** @type {?} */
         const stack = this._getStack();
-        /** @type {?} */
         const re = /([^(]+)@|at ([^(]+) \(/g;
-        /** @type {?} */
         const m = re.exec(stack);
-        /** @type {?} */
         const i = stack.lastIndexOf('/');
-        /** @type {?} */
         const n = i > 0 ? stack.substring(i + 1).split(':')[0] : stack;
-        /** @type {?} */
         const t = m ? (m[1] || m[2]) : stack;
-        /** @type {?} */
         const caller = (t.indexOf('/') > 0 ? t.substring(0, t.indexOf('/')) : '');
-        /** @type {?} */
         const _date = new Date();
-        /** @type {?} */
         const _time = (_date.getMonth() + 1) + "/" +
             _date.getDay() + "/" +
             _date.getFullYear() + " " +
@@ -200,15 +148,10 @@ class SmartConsoleService {
             _date.getMilliseconds();
         return [_time + " [" + n + (caller ? " | " + caller : '') + "] "].concat(...args);
     }
-    /**
-     * @param {...?} args
-     * @return {?}
-     */
     _info(...args) {
         if ((this.options.infoDisabled === undefined || !this.options.infoDisabled) &&
-            this._filtered(args) && !this._suppressed &&
+            this._filtered(args) && !this._suppressed(args) &&
             !this._throttle(args) && !this._blocked(args)) {
-            /** @type {?} */
             const newArgs = this.options.upscale ?
                 this._upscale(args) : args;
             if (this.options.upgrade) {
@@ -236,15 +179,10 @@ class SmartConsoleService {
         }
         this._reportWatch(args);
     }
-    /**
-     * @param {...?} args
-     * @return {?}
-     */
     _log(...args) {
         if ((this.options.logDisabled === undefined || !this.options.logDisabled) &&
-            this._filtered(args) && !this._suppressed &&
+            this._filtered(args) && !this._suppressed(args) &&
             !this._throttle(args) && !this._blocked(args)) {
-            /** @type {?} */
             const newArgs = this.options.upscale ?
                 this._upscale(args) : args;
             if (this.options.downGrade) {
@@ -283,15 +221,10 @@ class SmartConsoleService {
         }
         this._reportWatch(args);
     }
-    /**
-     * @param {...?} args
-     * @return {?}
-     */
     _warn(...args) {
         if ((this.options.warnDisabled === undefined || !this.options.warnDisabled) &&
             this._filtered(args) && !this._suppressed(args) &&
             !this._throttle(args) && !this._blocked(args)) {
-            /** @type {?} */
             const newArgs = this.options.upscale ?
                 this._upscale(args) : args;
             if (this.options.downGrade) {
@@ -330,15 +263,10 @@ class SmartConsoleService {
         }
         this._reportWatch(args);
     }
-    /**
-     * @param {...?} args
-     * @return {?}
-     */
     _error(...args) {
         if ((this.options.errorDisabled === undefined || !this.options.errorDisabled) &&
             this._filtered(args) && !this._suppressed(args) &&
             !this._throttle(args) && !this._blocked(args)) {
-            /** @type {?} */
             const newArgs = this.options.upscale ?
                 this._upscale(args) : args;
             if (this.options.downGrade) {
@@ -366,16 +294,11 @@ class SmartConsoleService {
         }
         this._reportWatch(args);
     }
-    /**
-     * @param {...?} args
-     * @return {?}
-     */
     _table(...args) {
         if ((this.options.tableDisabled === undefined || !this.options.errorDisabled) &&
-            this._filtered(args) && !this._suppressed &&
+            this._filtered(args) && !this._suppressed(args) &&
             !this._throttle(args) && !this._blocked(args)) {
             if (this.options.emitOutput) {
-                /** @type {?} */
                 const newArgs = this.options.upscale ?
                     this._upscale(args) : args;
                 this.output.emit(["[table]", ...newArgs]);
@@ -389,14 +312,9 @@ class SmartConsoleService {
         }
         this._reportWatch(args);
     }
-    /**
-     * @param {...?} args
-     * @return {?}
-     */
     _trace(...args) {
         if ((this.options.traceDisabled === undefined || !this.options.traceDisabled) &&
             this._filtered(args) && !this._throttle(args)) {
-            /** @type {?} */
             const newArgs = this.options.upscale ?
                 this._upscale(args) : args;
             if (this.options.emitOutput) {
@@ -411,10 +329,6 @@ class SmartConsoleService {
         }
         this._reportWatch(args);
     }
-    /**
-     * @param {...?} args
-     * @return {?}
-     */
     _exception(...args) {
         if ((this.options.exceptionDisabled === undefined || !this.options.exceptionDisabled) &&
             this._filtered(args) && !this._throttle(args)) {
@@ -430,10 +344,6 @@ class SmartConsoleService {
         }
         this._reportWatch(args);
     }
-    /**
-     * @param {...?} args
-     * @return {?}
-     */
     _debug(...args) {
         if ((this.options.debugDisabled === undefined || !this.options.debugDisabled) &&
             this._filtered(args) && !this._throttle(args)) {
@@ -449,10 +359,6 @@ class SmartConsoleService {
         }
         this._reportWatch(args);
     }
-    /**
-     * @param {...?} args
-     * @return {?}
-     */
     _assert(...args) {
         if ((this.options.assertDisabled === undefined || !this.options.assertDisabled) &&
             this._filtered(args) && !this._throttle(args)) {
@@ -468,10 +374,10 @@ class SmartConsoleService {
         }
         this._reportWatch(args);
     }
-    /**
-     * @param {?} instructions
-     * @return {?}
-     */
+    /*
+    * Will initialize smart logger.
+    * @instructions instructions to direct this service to suppress logs.
+    */
     makeSmartLogs(instructions) {
         this.options = instructions;
         if (console.log) {
@@ -520,71 +426,63 @@ class SmartConsoleService {
             console.exception = (...args) => { };
         }
     }
-    /**
-     * @return {?}
-     */
+    /*
+    * @return Event Emitter that may publisg logs.
+    */
     redirectedOutput() {
         return this.output;
     }
-    /**
-     * @param {?} key
-     * @return {?}
-     */
+    /*
+    * Will add a key to the warch list.
+    * @args key to be added.
+    */
     addWatch(key) {
         if (!this.watchList[key]) {
             this.watchList[key] = new EventEmitter();
         }
         return this.watchList[key];
     }
-    /**
-     * @param {?} key
-     * @return {?}
-     */
+    /*
+    * Will remove a key from the warch list.
+    * @args key to be removed. it will be wise to remove subscriptions to this key before calling this method.
+    */
     removeWatch(key) {
         delete this.watchList[key];
     }
-    /**
-     * @param {?} list
-     * @return {?}
-     */
+    /*
+    * Will clear warch list.
+    * @args list is a list of subscribers to the items in watchlist.
+    * It could be empty, but to avoid leaks, it will be wise to keep a record of your subscriptions.
+    */
     clearWatchList(list) {
         list.map((sbc) => sbc.unsubscribe());
         this.watchList = {};
     }
-    /**
-     * @param {?} args
-     * @return {?}
-     */
+    /*
+    * Will markup stack trace to provide HTML fragment with anchors foe every trace.
+    * @args argument that may contail stack trace.
+    * @return A more formal content with html fragment if stack travce applied ib advance.
+    */
     markupTrace(args) {
-        /** @type {?} */
         let result = args;
         if (args instanceof Array) {
             result = [];
             args.map((item) => {
                 if (typeof item === 'string') {
-                    /** @type {?} */
                     const breakOn = (item.indexOf('\n') > 0) ? '\n' : ((item.indexOf('\r') > 0) ? '\r' : undefined);
                     if (breakOn && (item.indexOf('@') > -1 || item.indexOf('(') > -1) && item.indexOf(':') > 0) {
-                        /** @type {?} */
                         const list = [];
                         item.split(breakOn).map((line) => {
-                            /** @type {?} */
                             const x = line.indexOf('@');
-                            /** @type {?} */
                             const z = line.indexOf('(');
                             if (z > 0) {
-                                /** @type {?} */
                                 const sublist = line.substring(z + 1, line.length - 1).split(':');
-                                /** @type {?} */
                                 const len = sublist.length;
-                                /** @type {?} */
                                 const name = line.substring(0, z) + ':' + sublist[len - 2] + ':' + sublist[len - 1];
-                                /** @type {?} */
                                 const ref = sublist.slice(0, len - 2).join(':');
                                 list.push('<a href="' + ref + '">' + name + '</a>');
                             }
                             else if (x >= 0) {
-                                /** @type {?} */
                                 const y = line.indexOf(':');
                                 if (y < 0) {
                                     list.push('<a href="' + line.substring(x + 1) + '">' +
@@ -592,13 +490,9 @@ class SmartConsoleService {
                                         '</a>');
                                 }
                                 else {
-                                    /** @type {?} */
                                     const sublist = line.substring(x + 1, line.length).split(':');
-                                    /** @type {?} */
                                     const len = sublist.length;
-                                    /** @type {?} */
                                     const name = line.substring(0, x) + ':' + sublist[len - 2] + ':' + sublist[len - 1];
-                                    /** @type {?} */
                                     const ref = sublist.slice(0, len - 2).join(':');
                                     list.push('<a href="' + ref + '">' + name + '</a>');
                                 }
@@ -636,51 +530,38 @@ class SmartConsoleService {
         }
         return result;
     }
-}
-SmartConsoleService.decorators = [
-    { type: Injectable, args: [{
-                providedIn: 'root'
-            },] }
-];
-/** @nocollapse */ SmartConsoleService.ngInjectableDef = defineInjectable({ factory: function SmartConsoleService_Factory() { return new SmartConsoleService(); }, token: SmartConsoleService, providedIn: "root" });
+};
+SmartConsoleService.ngInjectableDef = ɵɵdefineInjectable({ factory: function SmartConsoleService_Factory() { return new SmartConsoleService(); }, token: SmartConsoleService, providedIn: "root" });
+SmartConsoleService = __decorate([
+    Injectable({
+        providedIn: 'root'
+    })
+], SmartConsoleService);
 
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
- */
-class SmartConsoleModule {
-    /**
-     * @return {?}
-     */
+var SmartConsoleModule_1;
+let SmartConsoleModule = SmartConsoleModule_1 = class SmartConsoleModule {
     static forRoot() {
         return {
-            ngModule: SmartConsoleModule,
+            ngModule: SmartConsoleModule_1,
             providers: [
                 SmartConsoleService
             ]
         };
     }
-}
-SmartConsoleModule.decorators = [
-    { type: NgModule, args: [{
-                declarations: [],
-                exports: [],
-                imports: [CommonModule],
-                providers: [SmartConsoleService],
-                schemas: [CUSTOM_ELEMENTS_SCHEMA]
-            },] }
-];
+};
+SmartConsoleModule = SmartConsoleModule_1 = __decorate([
+    NgModule({
+        declarations: [],
+        exports: [],
+        imports: [CommonModule],
+        providers: [SmartConsoleService],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    })
+], SmartConsoleModule);
 
 /**
- * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
+ * Generated bundle index. Do not edit.
  */
 
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
- */
-
-export { SmartConsoleService, SmartConsoleModule };
-
+export { SmartConsoleModule, SmartConsoleService };
 //# sourceMappingURL=sedeh-smart-console.js.map

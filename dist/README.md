@@ -99,6 +99,8 @@ import { environment } from '../../environments/environment';
 
 | Version | Description                                                          |
 |---------|----------------------------------------------------------------------|
+|2.0.0    | Updated to Angular 8.                                                |
+|1.2.4    | Fixed issue raised as a result of solving issue 1 on github.         |
 |1.2.2    | Added filtering option as per requested in issue 1 on github.        |
 |1.2.1    | Updated Readme file.                                                 |
 |1.2.0    | Added throttling option in logs.                                     |

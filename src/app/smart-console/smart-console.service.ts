@@ -186,7 +186,7 @@ export class SmartConsoleService {
 	}
 	private _info(...args) {
 		if ((this.options.infoDisabled === undefined || !this.options.infoDisabled) &&
-			this._filtered(args) && !this._suppressed && 
+			this._filtered(args) && !this._suppressed(args) && 
 			!this._throttle(args) && !this._blocked(args)) {
 			const newArgs = this.options.upscale ?
 							this._upscale(args) : args;
@@ -215,7 +215,7 @@ export class SmartConsoleService {
 	}
 	private _log(...args) {
 		if ((this.options.logDisabled === undefined || !this.options.logDisabled) &&
-			this._filtered(args) && !this._suppressed && 
+			this._filtered(args) && !this._suppressed(args) && 
 			!this._throttle(args) && !this._blocked(args)) {
 			const newArgs = this.options.upscale ?
 							this._upscale(args) : args;
@@ -317,7 +317,7 @@ export class SmartConsoleService {
 	}
 	private _table(...args) {
 		if ((this.options.tableDisabled === undefined || !this.options.errorDisabled) &&
-			this._filtered(args) && !this._suppressed && 
+			this._filtered(args) && !this._suppressed(args) && 
 			!this._throttle(args) && !this._blocked(args)) {
 			if (this.options.emitOutput) {
 				const newArgs = this.options.upscale ?

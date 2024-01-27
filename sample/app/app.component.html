@@ -1,212 +1,274 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
+  <h1>Welcome to {{ title }}!</h1>
 </div>
-<div  class="resources">
-  <a href="https://www.npmjs.com/package/@sedeh/smart-console">npm install @sedeh/smart-console</a>
+<div class="resources">
+  <a href="https://www.npmjs.com/package/@sedeh/smart-console"
+    >npm install &64;sedeh/smart-console</a
+  >
   <p>Tested On Safari, Chrome, Mozilla, and IE11 browsers.</p>
 </div>
-  
+
 <fieldset>
   <legend>Options</legend>
   <span>
     <label for="output">
-      <input id="output"
-         type="checkbox" 
-         [checked]="options.output" 
-         (click)="update('output', $event)" />
+      <input
+        id="output"
+        type="checkbox"
+        [checked]="options.output"
+        (click)="update('output', $event)"
+      />
       Output Logs in log display of this page instead of browser console.
     </label>
   </span>
   <span>
     <label for="logAfterEmit">
-      <input id="logAfterEmit"
-         type="checkbox" 
-         [checked]="options.logAfterEmit" 
-         (click)="update('logAfterEmit', $event)" />
+      <input
+        id="logAfterEmit"
+        type="checkbox"
+        [checked]="options.logAfterEmit"
+        (click)="update('logAfterEmit', $event)"
+      />
       After sendig log to display them on this page, log it to console as well.
     </label>
   </span>
   <span>
     <label for="upscale">
-      <input id="upscale"
-         type="checkbox" 
-         [checked]="options.upscale" 
-         (click)="update('upscale', $event)" />
+      <input
+        id="upscale"
+        type="checkbox"
+        [checked]="options.upscale"
+        (click)="update('upscale', $event)"
+      />
       Show additional info (time, caller, calling method) on each log
     </label>
   </span>
   <span>
     <label for="logDisabled">
-      <input id="logDisabled"
-         type="checkbox" 
-         [checked]="options.logDisabled" 
-         (click)="update('logDisabled', $event)" />
+      <input
+        id="logDisabled"
+        type="checkbox"
+        [checked]="options.logDisabled"
+        (click)="update('logDisabled', $event)"
+      />
       Disables all log level console logs
     </label>
   </span>
   <span>
     <label for="infoDisabled">
-      <input id="infoDisabled"
-         type="checkbox" 
-         [checked]="options.infoDisabled" 
-         (click)="update('infoDisabled', $event)" />
+      <input
+        id="infoDisabled"
+        type="checkbox"
+        [checked]="options.infoDisabled"
+        (click)="update('infoDisabled', $event)"
+      />
       Disables all info level console logs
     </label>
   </span>
   <span>
     <label for="warnDisabled">
-      <input id="warnDisabled"
-         type="checkbox" 
-         [checked]="options.warnDisabled" 
-         (click)="update('warnDisabled', $event)" />
+      <input
+        id="warnDisabled"
+        type="checkbox"
+        [checked]="options.warnDisabled"
+        (click)="update('warnDisabled', $event)"
+      />
       Disables all warn level console logs
     </label>
   </span>
   <span>
     <label for="errorDisabled">
-      <input id="errorDisabled"
-         type="checkbox" 
-         [checked]="options.errorDisabled" 
-         (click)="update('errorDisabled', $event)" />
+      <input
+        id="errorDisabled"
+        type="checkbox"
+        [checked]="options.errorDisabled"
+        (click)="update('errorDisabled', $event)"
+      />
       Disables all error level console logs
     </label>
   </span>
   <span>
     <label for="traceDisabled">
-      <input id="traceDisabled"
-         type="checkbox" 
-         [checked]="options.traceDisabled" 
-         (click)="update('traceDisabled', $event)" />
+      <input
+        id="traceDisabled"
+        type="checkbox"
+        [checked]="options.traceDisabled"
+        (click)="update('traceDisabled', $event)"
+      />
       Disables all trace level console logs
     </label>
   </span>
   <span>
     <label for="assertDisabled">
-      <input id="assertDisabled"
-         type="checkbox" 
-         [checked]="options.assertDisabled" 
-         (click)="update('assertDisabled', $event)" />
+      <input
+        id="assertDisabled"
+        type="checkbox"
+        [checked]="options.assertDisabled"
+        (click)="update('assertDisabled', $event)"
+      />
       Disables assert logs on console
     </label>
   </span>
   <span>
     <label for="debugDisabled">
-      <input id="debugDisabled"
-         type="checkbox" 
-         [checked]="options.debugDisabled" 
-         (click)="update('debugDisabled', $event)" />
+      <input
+        id="debugDisabled"
+        type="checkbox"
+        [checked]="options.debugDisabled"
+        (click)="update('debugDisabled', $event)"
+      />
       Disables debug logs on console
     </label>
   </span>
   <span>
     <label for="exceptionDisabled">
-      <input id="exceptionDisabled"
-         type="checkbox" 
-         [checked]="options.exceptionDisabled" 
-         (click)="update('exceptionDisabled', $event)" />
+      <input
+        id="exceptionDisabled"
+        type="checkbox"
+        [checked]="options.exceptionDisabled"
+        (click)="update('exceptionDisabled', $event)"
+      />
       Disables exception logs on console
     </label>
   </span>
   <span>
     <label for="tableDisabled">
-      <input id="tableDisabled"
-         type="checkbox" 
-         [checked]="options.tableDisabled" 
-         (click)="update('tableDisabled', $event)" />
+      <input
+        id="tableDisabled"
+        type="checkbox"
+        [checked]="options.tableDisabled"
+        (click)="update('tableDisabled', $event)"
+      />
       Disables all table console logs
     </label>
   </span>
   <span>
     <label for="downGrade">
-      <input id="downGrade"
-         type="checkbox" 
-         [checked]="options.downGrade" 
-         (click)="update('downGrade', $event)" />
-      Downgrade logs from warning to info, or from log to warning, or from error to log
+      <input
+        id="downGrade"
+        type="checkbox"
+        [checked]="options.downGrade"
+        (click)="update('downGrade', $event)"
+      />
+      Downgrade logs from warning to info, or from log to warning, or from error
+      to log
     </label>
   </span>
   <span>
     <label for="upgrade">
-      <input id="upgrade"
-         type="checkbox" 
-         [checked]="options.upgrade" 
-         (click)="update('upgrade', $event)" />
-      Upgrades a log from info to warning, or from warning to log, or from  log to error
+      <input
+        id="upgrade"
+        type="checkbox"
+        [checked]="options.upgrade"
+        (click)="update('upgrade', $event)"
+      />
+      Upgrades a log from info to warning, or from warning to log, or from log
+      to error
     </label>
   </span>
-  <span><hr/></span>
+  <span><hr /></span>
   <span>
     <label for="throttleOn">
-      Throttle logs on: 
+      Throttle logs on:
       <select id="throttleOn" (change)="onChange($event)">
-        <option value='0'>NONE</option>
-        <option value='1'>level_1</option>
-        <option value='2'>level_2</option>
-        <option value='3'>level_3</option>
-        <option value='4'>level_4</option>
-        <option value='5'>level_5</option>
+        <option value="0">NONE</option>
+        <option value="1">level_1</option>
+        <option value="2">level_2</option>
+        <option value="3">level_3</option>
+        <option value="4">level_4</option>
+        <option value="5">level_5</option>
       </select>
     </label>
   </span>
   <span>
     <label for="blockCaller">
-      Block Logs based on Caller (comma separated): 
-      <input id="blockCaller" [value]="options.blockCaller" 
-        (keyup)="keyup('blockCaller', $event)" />
+      Block Logs based on Caller (comma separated):
+      <input
+        id="blockCaller"
+        [value]="options.blockCaller"
+        (keyup)="keyup('blockCaller', $event)"
+      />
     </label>
   </span>
   <span>
     <label for="suppress">
-      Suppress Logs based on keywords (comma separated): 
-      <input id="suppress" [value]="options.suppress"  
-        (keyup)="keyup('suppress', $event)"/>
+      Suppress Logs based on keywords (comma separated):
+      <input
+        id="suppress"
+        [value]="options.suppress"
+        (keyup)="keyup('suppress', $event)"
+      />
     </label>
   </span>
   <span>
     <label for="filter">
-      filter Logs based on keywords (comma separated): 
-      <input id="filter" [value]="options.filter"  
-        (keyup)="keyup('filter', $event)"/>
+      filter Logs based on keywords (comma separated):
+      <input
+        id="filter"
+        [value]="options.filter"
+        (keyup)="keyup('filter', $event)"
+      />
     </label>
   </span>
   <span>
     <label for="watch">
-      Notify me when any one of the following keywords are in a log (comma separated): 
-      <input id="watch" [value]="options.watch"  
-        (keyup)="keyup('watch', $event)"/>
+      Notify me when any one of the following keywords are in a log (comma
+      separated):
+      <input
+        id="watch"
+        [value]="options.watch"
+        (keyup)="keyup('watch', $event)"
+      />
     </label>
   </span>
 </fieldset>
 <fieldset>
   <legend>Log Samples</legend>
-    <ul>
-      <li>console.log('test',1,2)</li>
-      <li>console.info('test',1, json)</li>
-      <li>console.info('test2',1,2)</li>
-      <li>console.warning('test',1,2)</li>
-      <li>console.warning('test3',1,2)</li>
-      <li>console.error('test',1,2)</li>
-      <li>console.error('test4',1,2)</li>
-      <li>console.exception('exceptional',43343,"not!")</li>
-      <li>console.debug('debug this bug',"1,2")</li>
-      <li>console.table(['test',1,2])</li>
-      <li>console.trace(new Error())</li>
-      <li>console.assert(false, "asserting test!")</li>
-      <li>console.log('level_3', 'message that may not be as imortant', 'additional info');</li>
-      <li>console.log('level_6', 'message that may be imortant', 'additional info');</li>
-      <li>console.info('level_6', 'message that may be imortant', 'additional info');</li>
-      <li>console.trace('level_5', 'message that may or may not be as imortant', 'additional info');</li>
-      <li>console.warn('level_5', 'message that may or may not be as imortant', 'additional info');</li>
-      <li>make http call to invalid address that would cause exception. this will raise native log which cannot be overtaken.</li>
-    </ul>
+  <ul>
+    <li>console.log('test',1,2)</li>
+    <li>console.info('test',1, json)</li>
+    <li>console.info('test2',1,2)</li>
+    <li>console.warning('test',1,2)</li>
+    <li>console.warning('test3',1,2)</li>
+    <li>console.error('test',1,2)</li>
+    <li>console.error('test4',1,2)</li>
+    <li>console.exception('exceptional',43343,"not!")</li>
+    <li>console.debug('debug this bug',"1,2")</li>
+    <li>console.table(['test',1,2])</li>
+    <li>console.trace(new Error())</li>
+    <li>console.assert(false, "asserting test!")</li>
+    <li>
+      console.log('level_3', 'message that may not be as imortant', 'additional
+      info');
+    </li>
+    <li>
+      console.log('level_6', 'message that may be imortant', 'additional info');
+    </li>
+    <li>
+      console.info('level_6', 'message that may be imortant', 'additional
+      info');
+    </li>
+    <li>
+      console.trace('level_5', 'message that may or may not be as imortant',
+      'additional info');
+    </li>
+    <li>
+      console.warn('level_5', 'message that may or may not be as imortant',
+      'additional info');
+    </li>
+    <li>
+      make http call to invalid address that would cause exception. this will
+      raise native log which cannot be overtaken.
+    </li>
+  </ul>
 </fieldset>
 <div class="controller">
-    <button (click)="execute()">Execute Log Samples</button>
-    <button (click)="clear()">Clear</button>
+  <button (click)="execute()">Execute Log Samples</button>
+  <button (click)="clear()">Clear</button>
 </div>
 <div class="note" *ngIf="data.length">
-  <ul><li *ngFor="let item of data" [innerHTML]="item"></li></ul>
+  <ul>
+    <li *ngFor="let item of data" [innerHTML]="item"></li>
+  </ul>
 </div>

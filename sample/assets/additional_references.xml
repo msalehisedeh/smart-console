@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ref:AdditionalReferences xmlns:ref="http://www.w3.org/additionalreferences">
+    <ref:Title>Additional References:</ref:Title>
+    <ref:Links>
+        <ref:Link>
+            <ref:LinkType>Hyperlink</ref:LinkType>
+            <ref:LinkText>Go to our web page</ref:LinkText>
+            <ref:LinkUrl>hyperlink_1234.xml</ref:LinkUrl>
+        </ref:Link>
+        <ref:Link>
+            <ref:LinkType>Hyperlink</ref:LinkType>
+            <ref:LinkText>Find phone numbers</ref:LinkText>
+            <ref:LinkUrl>hyperlink_1234.xml</ref:LinkUrl>
+        </ref:Link>
+    </ref:Links>
+</ref:AdditionalReferences>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<marketplace>  
+  <market>/assets/books.xml</market>  
+  <market>/assets/toys.xml</market>  
+  <market>/assets/tools.xml</market>  
+</marketplace>  

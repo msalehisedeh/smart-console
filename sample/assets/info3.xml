@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<book category="WEB">  
+  <title lang="en">Learning XML</title>  
+  <author>Erik T. Ray</author>  
+  <year>2003</year>  
+  <price>39.95</price>  
+  <description><![CDATA[In languages that employ articles, every common noun, with some exceptions]]></description>
+  <ratings>
+    <rate>2.7</rate>
+    <rate>3.2</rate>
+    <rate>4.8</rate>
+  </ratings>
+</book>  

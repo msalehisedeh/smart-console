@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content>
+<books>  
+  <book category="COOKING">  
+    <title lang="en">Everyday Italian</title>  
+    <author>Giada De Laurentiis</author>  
+    <year>2005</year>  
+    <price>30.00</price>  
+    <description><![CDATA[articles are a special part of speech which cannot be easily combined]]></description>
+    <ratings>
+      <rate>2.7</rate>
+      <rate>3.2</rate>
+      <rate>4.8</rate>
+    </ratings>
+  </book>  
+  <book category="CHILDREN">  
+    <title lang="en">Harry Potter</title>  
+    <author>J K. Rowling</author>  
+    <year>2005</year>  
+    <price>29.99</price>  
+    <description><![CDATA[In languages that employ articles, every common noun, with some exceptions, is expressed]]></description>
+    <ratings>
+      <rate>2.7</rate>
+      <rate>3.2</rate>
+      <rate>4.8</rate>
+    </ratings>
+  </book>  
+  <book category="WEB">  
+    <title lang="en">Learning XML</title>  
+    <author>Erik T. Ray</author>  
+    <year>2003</year>  
+    <price>39.95</price>  
+    <description><![CDATA[An article (with the linguistic glossing abbreviation ART) is a word that is used with a noun]]></description>
+    <ratings>
+      <rate>2.7</rate>
+      <rate>3.2</rate>
+      <rate>4.8</rate>
+    </ratings>
+  </book>  
+</books>
+<writers>
+  <writer>
+    <name>
+      <fname>Giada</fname>
+      <lname>De Laurentiis</lname>
+    </name>
+    <age>32</age>
+    <publications>12</publications>
+  </writer>
+  <writer>
+    <name>
+      <fname>J K.</fname>
+      <lname>Rowling</lname>
+    </name>
+    <age>42</age>
+    <publications>4</publications>
+  </writer>
+  <writer>
+    <name>
+      <fname>Erik T.</fname>
+      <lname>Ray</lname>
+    </name>
+    <age>54</age>
+    <publications>7</publications>
+  </writer>
+</writers> 
+</content>

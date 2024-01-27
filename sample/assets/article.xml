@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<article:Article xmlns:article="http://www.w3.org/article">
+<article:Title>Get data?</article:Title>
+<article:Abstract>
+<![CDATA[<p xmlns="http://www.w3.org/1999/xhtml">
+<p xmlns="http://www.w3.org/1999/xhtml">If you have not registered, the best place to request data is at our online website.</p>
+<p xmlns="http://www.w3.org/1999/xhtml">After making your request, we will be notified to approve it.</p>
+<p xmlns="http://www.w3.org/1999/xhtml">We'll let you know when your request is approved.</p>
+]]></article:Abstract>
+<article:AdditionalPath>additional_references.xml</article:AdditionalPath>
+<article:RelatedToolsPath>related_tools.xml</article:RelatedToolsPath>
+</article:Article>

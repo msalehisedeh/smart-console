@@ -1,0 +1,56 @@
+[
+    {
+    "category": "COOKING",
+    "title": {
+        "lang": "en",
+        "#text": "Everyday Italian"
+    },
+    "author": "Giada De Laurentiis",
+    "year": "2005",
+    "price": "30.00",
+    "description": "articles are a special part of speech which cannot be easily combined",
+    "ratings": {
+        "rate": [
+        "2.7",
+        "3.2",
+        "4.8"
+        ]
+    }
+    },
+    {
+    "category": "CHILDREN",
+    "title": {
+        "lang": "en",
+        "#text": "Harry Potter"
+    },
+    "author": "J K. Rowling",
+    "year": "2005",
+    "price": "29.99",
+    "description": "In languages that employ articles, every common noun, with some exceptions, is expressed",
+    "ratings": {
+        "rate": [
+        "2.7",
+        "3.2",
+        "4.8"
+        ]
+    }
+    },
+    {
+    "category": "WEB",
+    "title": {
+        "lang": "en",
+        "#text": "Learning XML"
+    },
+    "author": "Erik T. Ray",
+    "year": "2003",
+    "price": "39.95",
+    "description": "An article (with the linguistic glossing abbreviation ART) is a word that is used with a noun",
+    "ratings": {
+        "rate": [
+        "2.7",
+        "3.2",
+        "4.8"
+        ]
+    }
+    }
+]

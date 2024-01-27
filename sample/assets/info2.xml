@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<book category="CHILDREN">  
+  <title lang="en">Harry Potter</title>  
+  <author>J K. Rowling</author>  
+  <year>2015</year>  
+  <price>29.99</price>  
+  <description><![CDATA[articles are a special part of speech which cannot be easily combined]]></description>
+  <ratings>
+    <rate>2.7</rate>
+    <rate>3.2</rate>
+    <rate>4.8</rate>
+  </ratings>
+</book>  

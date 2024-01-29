@@ -9,6 +9,15 @@
     "test": "ng test"
   },
   "private": true,
+  "keywords": [
+    "angular 6+",
+    "debug",
+    "console",
+    "log",
+    "exception",
+    "error",
+    "trace"
+  ],
   "dependencies": {
     "@angular/animations": "^15.2.0",
     "@angular/common": "^15.2.0",

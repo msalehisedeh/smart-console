@@ -7,7 +7,7 @@ You can use this tool to have your application do all of that and maybe a bit mo
 
 **I appreciate comments and ideas to make this tool versatile.**
 
-[Live Demo](https://smart-console.stackblitz.io) | 
+[Live Demo](https://stackblitz.com/edit/smart-console?file=src%2Fapp%2Fapp.component.ts) | 
 [NPM](https://www.npmjs.com/package/@sedeh/smart-console) | 
 [Comments/Requests](https://github.com/msalehisedeh/smart-console/issues)
 
